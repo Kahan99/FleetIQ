@@ -1,71 +1,52 @@
 interface StatusPillProps {
   status: string;
+  size?: "sm" | "md";
 }
 
 const statusConfig: Record<string, { label: string; classes: string }> = {
-  available: {
-    label: "Available",
-    classes: "bg-green-50 text-green-700 border-green-200",
+  available: { label: "Available", classes: "bg-[#16A34A]/10 text-[#16A34A]" },
+  active: { label: "Active", classes: "bg-[#16A34A]/10 text-[#16A34A]" },
+  on_trip: { label: "On Trip", classes: "bg-[#2563EB]/10 text-[#2563EB]" },
+  in_use: { label: "In Use", classes: "bg-[#2563EB]/10 text-[#2563EB]" },
+  in_progress: {
+    label: "In Progress",
+    classes: "bg-[#F59E0B]/10 text-[#F59E0B]",
   },
-  on_trip: {
-    label: "On Trip",
-    classes: "bg-blue-50 text-blue-700 border-blue-200",
-  },
-  in_service: {
-    label: "In Service",
-    classes: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  },
+  in_service: { label: "In Service", classes: "bg-gray-100 text-gray-500" },
+  in_shop: { label: "In Shop", classes: "bg-[#F59E0B]/10 text-[#F59E0B]" },
   maintenance: {
     label: "Maintenance",
-    classes: "bg-red-50 text-red-700 border-red-200",
+    classes: "bg-[#F59E0B]/10 text-[#F59E0B]",
   },
-  in_use: {
-    label: "In Use",
-    classes: "bg-indigo-50 text-indigo-700 border-indigo-200",
-  },
+  scheduled: { label: "Scheduled", classes: "bg-[#2563EB]/10 text-[#2563EB]" },
   out_of_service: {
     label: "Out of Service",
-    classes: "bg-red-50 text-red-700 border-red-200",
+    classes: "bg-[#DC2626]/10 text-[#DC2626]",
   },
-  on_duty: {
-    label: "On Duty",
-    classes: "bg-green-50 text-green-700 border-green-200",
-  },
-  off_duty: {
-    label: "Off Duty",
-    classes: "bg-gray-50 text-gray-700 border-gray-200",
-  },
-  suspended: {
-    label: "Suspended",
-    classes: "bg-orange-50 text-orange-700 border-orange-200",
-  },
+  on_duty: { label: "On Duty", classes: "bg-[#16A34A]/10 text-[#16A34A]" },
+  off_duty: { label: "Off Duty", classes: "bg-gray-100 text-gray-400" },
+  suspended: { label: "Suspended", classes: "bg-[#DC2626]/10 text-[#DC2626]" },
   dispatched: {
     label: "Dispatched",
-    classes: "bg-blue-50 text-blue-700 border-blue-200",
+    classes: "bg-[#2563EB]/10 text-[#2563EB]",
   },
-  completed: {
-    label: "Completed",
-    classes: "bg-green-50 text-green-700 border-green-200",
-  },
-  cancelled: {
-    label: "Cancelled",
-    classes: "bg-red-50 text-red-700 border-red-200",
-  },
-  draft: {
-    label: "Draft",
-    classes: "bg-gray-50 text-gray-700 border-gray-200",
-  },
+  completed: { label: "Completed", classes: "bg-[#16A34A]/10 text-[#16A34A]" },
+  cancelled: { label: "Cancelled", classes: "bg-[#DC2626]/10 text-[#DC2626]" },
+  draft: { label: "Draft", classes: "bg-gray-100 text-gray-500" },
+  inactive: { label: "Inactive", classes: "bg-gray-100 text-gray-400" },
+  retired: { label: "Retired", classes: "bg-gray-100 text-gray-400" },
+  overdue: { label: "Overdue", classes: "bg-[#DC2626]/10 text-[#DC2626]" },
 };
 
-export function StatusPill({ status }: StatusPillProps) {
+export function StatusPill({ status, size = "sm" }: StatusPillProps) {
   const config = statusConfig[status] || {
-    label: status,
-    classes: "bg-gray-50 text-gray-700",
+    label: status?.replace(/_/g, " ") || "Unknown",
+    classes: "bg-gray-100 text-gray-500",
   };
 
   return (
     <span
-      className={`px-3 py-1 text-xs font-bold rounded-full border ${config.classes}`}
+      className={`${size === "sm" ? "text-[11px] px-2.5 py-1" : "text-xs px-3 py-1.5"} font-semibold rounded-full capitalize ${config.classes}`}
     >
       {config.label}
     </span>
