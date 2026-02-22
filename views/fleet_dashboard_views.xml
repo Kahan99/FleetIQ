@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fleetflow_dashboard_kanban" model="ir.ui.view">
+        <field name="name">fleetflow.dashboard.kanban</field>
+        <field name="model">fleetflow.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban create="false" delete="false" edit="false" class="o_kanban_dashboard">
+                <field name="active_fleet_count"/>
+                <field name="vehicles_in_shop"/>
+                <field name="utilization_rate"/>
+                <field name="pending_trips"/>
+                <field name="total_revenue"/>
+                <field name="total_operational_cost"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_card p-3">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-primary text-white">
+                                        <div class="fw-bold">Active Fleet</div>
+                                        <div class="fs-3"><field name="active_fleet_count"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-danger text-white">
+                                        <div class="fw-bold">Vehicles In Shop</div>
+                                        <div class="fs-3"><field name="vehicles_in_shop"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-info text-white">
+                                        <div class="fw-bold">Utilization Rate</div>
+                                        <div class="fs-3"><field name="utilization_rate"/>%</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-warning text-dark">
+                                        <div class="fw-bold">Pending Trips</div>
+                                        <div class="fs-3"><field name="pending_trips"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-success text-white">
+                                        <div class="fw-bold">Total Revenue</div>
+                                        <div class="fs-4"><field name="total_revenue"/></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 rounded bg-secondary text-white">
+                                        <div class="fw-bold">Operational Cost</div>
+                                        <div class="fs-4"><field name="total_operational_cost"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_dashboard_form" model="ir.ui.view">
+        <field name="name">fleetflow.dashboard.form</field>
+        <field name="model">fleetflow.dashboard</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="company_id" readonly="1"/>
+                    </group>
+                    <group string="Metrics" col="2">
+                        <field name="active_fleet_count" readonly="1"/>
+                        <field name="vehicles_in_shop" readonly="1"/>
+                        <field name="utilization_rate" readonly="1"/>
+                        <field name="pending_trips" readonly="1"/>
+                        <field name="total_revenue" readonly="1"/>
+                        <field name="total_operational_cost" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

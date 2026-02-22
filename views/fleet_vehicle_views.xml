@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fleetflow_vehicle_tree" model="ir.ui.view">
+        <field name="name">fleetflow.vehicle.tree</field>
+        <field name="model">fleetflow.vehicle</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="status == 'available'" decoration-warning="status in ('on_trip', 'in_service')" decoration-danger="status in ('in_shop', 'maintenance')" decoration-muted="status in ('inactive', 'retired')">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="vehicle_type"/>
+                <field name="driver_id"/>
+                <field name="status" widget="badge" decoration-success="status == 'available'" decoration-warning="status in ('on_trip', 'in_service')" decoration-danger="status in ('in_shop', 'maintenance')" decoration-muted="status in ('inactive', 'retired')"/>
+                <field name="odometer"/>
+                <field name="fuel_efficiency" avg="Average Efficiency"/>
+                <field name="total_revenue"/>
+                <field name="total_operational_cost"/>
+                <field name="roi" widget="percentage"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_vehicle_kanban" model="ir.ui.view">
+        <field name="name">fleetflow.vehicle.kanban</field>
+        <field name="model">fleetflow.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="driver_id"/>
+                <field name="status"/>
+                <field name="total_revenue"/>
+                <field name="total_operational_cost"/>
+                <field name="roi"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <div class="o_kanban_card_header">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div>
+                                <span class="text-muted">Plate:</span>
+                                <field name="license_plate"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">Driver:</span>
+                                <field name="driver_id"/>
+                            </div>
+                            <div class="mt-2">
+                                <field name="status" widget="badge"/>
+                            </div>
+                            <div class="mt-2">
+                                <span class="text-muted">Revenue:</span>
+                                <field name="total_revenue"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">Operational Cost:</span>
+                                <field name="total_operational_cost"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">ROI:</span>
+                                <field name="roi"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_vehicle_form" model="ir.ui.view">
+        <field name="name">fleetflow.vehicle.form</field>
+        <field name="model">fleetflow.vehicle</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!--
+                        Retire: visible on all non-retired, non-on_trip vehicles.
+                        action_retire() also sets active=False, so the vehicle
+                        disappears from default (active) searches including trip
+                        vehicle_id domain filters.
+                    -->
+                    <button name="action_retire"
+                            string="Retire Vehicle"
+                            type="object"
+                            class="btn-danger"
+                            confirm="This will permanently retire the vehicle and remove it from dispatch. Continue?"
+                            invisible="status in ('retired', 'on_trip')"/>
+
+                    <!--
+                        Reactivate: only visible when already retired.
+                        'active_test': False context is set on the action so
+                        retired (inactive) vehicles can still be opened.
+                    -->
+                    <button name="action_set_available"
+                            string="Reactivate"
+                            type="object"
+                            class="btn-success"
+                            confirm="Reactivate this vehicle and set it back to Available?"
+                            invisible="status != 'retired'"/>
+
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="available,on_trip,in_service,in_shop,maintenance,inactive,retired"
+                           readonly="status == 'retired'"
+                           decoration-success="status == 'available'"
+                           decoration-warning="status in ('on_trip', 'in_service')"
+                           decoration-danger="status in ('in_shop', 'maintenance')"
+                           decoration-muted="status in ('inactive', 'retired')"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_fleetflow_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                            <div class="o_stat_info"><span class="o_stat_text">Trips</span></div>
+                        </button>
+                        <button name="%(action_fleetflow_maintenance)d" type="action" class="oe_stat_button" icon="fa-wrench" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                            <div class="o_stat_info"><span class="o_stat_text">Maintenance</span></div>
+                        </button>
+                        <button name="%(action_fleetflow_expense)d" type="action" class="oe_stat_button" icon="fa-money" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                            <div class="o_stat_info"><span class="o_stat_text">Expenses</span></div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="license_plate"/>
+                            <field name="vin"/>
+                            <field name="vehicle_type"/>
+                            <field name="fuel_type"/>
+                            <field name="capacity"/>
+                            <field name="max_capacity"/>
+                        </group>
+                        <group>
+                            <field name="driver_id"/>
+                            <field name="odometer"/>
+                            <field name="acquisition_cost"/>
+                            <field name="status"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="trip_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="maintenance_cost_total" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Operational Analytics">
+                        <group>
+                            <field name="total_fuel_cost" readonly="1" widget="monetary"/>
+                            <field name="total_liters" readonly="1"/>
+                            <field name="fuel_efficiency" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="total_maintenance_cost" readonly="1" widget="monetary"/>
+                            <field name="total_operational_cost" readonly="1" widget="monetary"/>
+                        </group>
+                    </group>
+                    <group string="Financial Performance">
+                        <group>
+                            <field name="total_revenue" readonly="1" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="roi" widget="percentage" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Trips">
+                            <field name="trip_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="origin"/>
+                                    <field name="destination"/>
+                                    <field name="cargo_weight"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Maintenance">
+                            <field name="maintenance_ids" readonly="1">
+                                <tree>
+                                    <field name="issue"/>
+                                    <field name="service_date"/>
+                                    <field name="cost"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Expenses">
+                            <field name="expense_ids" readonly="1">
+                                <tree>
+                                    <field name="trip_id"/>
+                                    <field name="liters"/>
+                                    <field name="fuel_cost"/>
+                                    <field name="cost_per_km"/>
+                                    <field name="expense_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_vehicle_search" model="ir.ui.view">
+        <field name="name">fleetflow.vehicle.search</field>
+        <field name="model">fleetflow.vehicle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="driver_id"/>
+                <filter name="status_available" string="Available" domain="[('status', '=', 'available')]"/>
+                <filter name="status_on_trip" string="On Trip" domain="[('status', '=', 'on_trip')]"/>
+                <filter name="status_in_shop" string="In Shop" domain="[('status', '=', 'in_shop')]"/>
+                <filter name="status_maintenance" string="Maintenance" domain="[('status', '=', 'maintenance')]"/>
+                <filter name="status_inactive" string="Inactive" domain="[('status', 'in', ('inactive', 'retired'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_type" string="Type" context="{'group_by': 'vehicle_type'}"/>
+                    <filter name="group_by_driver" string="Driver" context="{'group_by': 'driver_id'}"/>
+                    <filter name="group_by_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<!--
+    FleetFlow Command Center — OWL 2 QWeb Template (Odoo 17)
+    Component: CommandCenterDashboard
+    Registered as: fleetflow.CommandCenter
+-->
+
+<t t-name="fleetflow.CommandCenter" owl="1">
+  <div class="ff-cc-root">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <div class="ff-cc-header">
+      <div class="ff-cc-title-block">
+        <span class="ff-cc-icon" role="img" aria-label="Command Center">🚦</span>
+        <div>
+          <h1 class="ff-cc-title">Command Center</h1>
+          <p class="ff-cc-subtitle">Fleet operations — real-time overview</p>
+        </div>
+      </div>
+      <div class="ff-cc-actions">
+        <span t-if="state.last_updated" class="ff-cc-updated">
+          Updated <b t-esc="state.last_updated"/>
+        </span>
+        <button class="ff-btn ff-btn-refresh"
+                t-on-click="onRefresh"
+                t-att-disabled="state.loading">
+          <t t-if="state.loading">⟳ Loading…</t>
+          <t t-else="">⟳ Refresh</t>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Filters ──────────────────────────────────────────── -->
+    <div class="ff-cc-filters">
+      <div class="ff-filter-group">
+        <label class="ff-filter-label" for="ff_type_select">Vehicle Type</label>
+        <select id="ff_type_select" class="ff-filter-select" t-on-change="onTypeChange">
+          <t t-foreach="vehicleTypes" t-as="vt" t-key="vt">
+            <option t-att-value="vt"
+                    t-att-selected="state.vehicle_type === vt">
+              <t t-esc="typeLabel(vt)"/>
+            </option>
+          </t>
+        </select>
+      </div>
+      <div class="ff-filter-group">
+        <label class="ff-filter-label" for="ff_status_select">Vehicle Status</label>
+        <select id="ff_status_select" class="ff-filter-select" t-on-change="onStatusChange">
+          <t t-foreach="vehicleStatuses" t-as="vs" t-key="vs">
+            <option t-att-value="vs"
+                    t-att-selected="state.vehicle_status === vs">
+              <t t-esc="statusLabel(vs)"/>
+            </option>
+          </t>
+        </select>
+      </div>
+    </div>
+
+    <!-- ── Error banner ─────────────────────────────────────── -->
+    <div t-if="state.error" class="ff-cc-error">
+      ⚠ <t t-esc="state.error"/>
+    </div>
+
+    <!-- ── KPI Cards ────────────────────────────────────────── -->
+    <div class="ff-kpi-grid" t-if="!state.error">
+
+      <!-- Active Fleet -->
+      <div class="ff-kpi-card ff-kpi-primary">
+        <div class="ff-kpi-icon" role="img">🚚</div>
+        <div class="ff-kpi-body">
+          <div class="ff-kpi-value" t-esc="state.active_fleet"/>
+          <div class="ff-kpi-label">Active Fleet</div>
+          <div class="ff-kpi-sub">Vehicles currently on trip</div>
+        </div>
+      </div>
+
+      <!-- Maintenance Alerts -->
+      <div t-attf-class="ff-kpi-card #{alertColorClass()}">
+        <div class="ff-kpi-icon" role="img">🔧</div>
+        <div class="ff-kpi-body">
+          <div class="ff-kpi-value" t-esc="state.alerts"/>
+          <div class="ff-kpi-label">Maintenance Alerts</div>
+          <div class="ff-kpi-sub">Vehicles in shop</div>
+        </div>
+      </div>
+
+      <!-- Utilization Rate -->
+      <div t-attf-class="ff-kpi-card #{utilizationColorClass()}">
+        <div class="ff-kpi-icon" role="img">📊</div>
+        <div class="ff-kpi-body">
+          <div class="ff-kpi-value"><t t-esc="fmt(state.utilization, 1)"/>%</div>
+          <div class="ff-kpi-label">Utilization Rate</div>
+          <div class="ff-kpi-sub">On-trip ÷ active fleet</div>
+        </div>
+        <div class="ff-util-bar-bg" title="Fleet utilization">
+          <div class="ff-util-bar-fill"
+               t-attf-style="width: #{Math.min(state.utilization, 100)}%"/>
+        </div>
+      </div>
+
+      <!-- Pending Cargo -->
+      <div class="ff-kpi-card ff-kpi-warning">
+        <div class="ff-kpi-icon" role="img">📦</div>
+        <div class="ff-kpi-body">
+          <div class="ff-kpi-value" t-esc="state.pending_cargo"/>
+          <div class="ff-kpi-label">Pending Cargo</div>
+          <div class="ff-kpi-sub">Trips in draft state</div>
+        </div>
+      </div>
+
+    </div><!-- /.ff-kpi-grid -->
+
+    <!-- ── Secondary body: breakdowns + live feeds ──────────── -->
+    <div class="ff-cc-body" t-if="!state.error">
+
+      <!-- Status Breakdown -->
+      <div class="ff-cc-card">
+        <div class="ff-cc-card-header">Fleet Status Breakdown</div>
+        <div class="ff-cc-card-body">
+          <t t-foreach="['available','on_trip','in_service','in_shop','maintenance','inactive']"
+             t-as="st" t-key="st">
+            <div class="ff-breakdown-row">
+              <span class="ff-breakdown-label"><t t-esc="statusLabel(st)"/></span>
+              <div class="ff-breakdown-bar-bg">
+                <div class="ff-breakdown-bar-fill"
+                     t-att-data-status="st"
+                     t-attf-style="width: #{pct(state.status_breakdown[st] or 0)}%"/>
+              </div>
+              <span class="ff-breakdown-count"
+                    t-esc="state.status_breakdown[st] or 0"/>
+            </div>
+          </t>
+        </div>
+      </div>
+
+      <!-- Type Breakdown -->
+      <div class="ff-cc-card">
+        <div class="ff-cc-card-header">Fleet by Vehicle Type</div>
+        <div class="ff-cc-card-body">
+          <t t-foreach="['truck','van','car','bus','other']"
+             t-as="tv" t-key="tv">
+            <div class="ff-breakdown-row">
+              <span class="ff-breakdown-label"><t t-esc="typeLabel(tv)"/></span>
+              <div class="ff-breakdown-bar-bg">
+                <div class="ff-breakdown-bar-fill ff-bar-type"
+                     t-attf-style="width: #{pct(state.type_breakdown[tv] or 0)}%"/>
+              </div>
+              <span class="ff-breakdown-count"
+                    t-esc="state.type_breakdown[tv] or 0"/>
+            </div>
+          </t>
+        </div>
+      </div>
+
+      <!-- Live Trips Feed -->
+      <div class="ff-cc-card ff-cc-card-wide">
+        <div class="ff-cc-card-header">
+          Live Trips
+          <span class="ff-badge ff-badge-info">Draft &amp; Dispatched</span>
+        </div>
+        <div class="ff-cc-card-body ff-no-pad">
+          <div t-if="state.recent_trips.length === 0" class="ff-empty">
+            No active trips found.
+          </div>
+          <table t-else="" class="ff-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Route</th>
+                <th>Vehicle</th>
+                <th>Driver</th>
+                <th>Cargo</th>
+                <th>State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="state.recent_trips" t-as="trip" t-key="trip.id">
+                <tr>
+                  <td><b t-esc="trip.name"/></td>
+                  <td><t t-esc="trip.origin"/> → <t t-esc="trip.destination"/></td>
+                  <td t-esc="trip.vehicle_id and trip.vehicle_id[1] or '—'"/>
+                  <td t-esc="trip.driver_id  and trip.driver_id[1]  or '—'"/>
+                  <td><t t-esc="trip.cargo_weight"/> T</td>
+                  <td>
+                    <span t-attf-class="#{tripStateBadgeClass(trip.state)}"
+                          t-esc="tripStateLabel(trip.state)"/>
+                  </td>
+                </tr>
+              </t>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Vehicles In Shop Alert -->
+      <div class="ff-cc-card ff-cc-card-wide"
+           t-if="state.shop_vehicles.length > 0">
+        <div class="ff-cc-card-header ff-header-danger">
+          🔧 Vehicles In Shop — Immediate Attention Required
+        </div>
+        <div class="ff-cc-card-body ff-no-pad">
+          <table class="ff-table">
+            <thead>
+              <tr>
+                <th>Vehicle</th>
+                <th>License Plate</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <t t-foreach="state.shop_vehicles" t-as="sv" t-key="sv.id">
+                <tr class="ff-row-danger">
+                  <td><b t-esc="sv.name"/></td>
+                  <td t-esc="sv.license_plate"/>
+                  <td t-esc="typeLabel(sv.vehicle_type)"/>
+                  <td>
+                    <span class="ff-badge ff-badge-danger">In Shop</span>
+                  </td>
+                </tr>
+              </t>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /.ff-cc-body -->
+
+  </div><!-- /.ff-cc-root -->
+</t>
+
+</templates>

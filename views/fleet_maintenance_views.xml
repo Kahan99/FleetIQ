@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fleetflow_maintenance_tree" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.tree</field>
+        <field name="model">fleetflow.maintenance</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="vehicle_status in ('in_shop', 'maintenance')" decoration-muted="vehicle_status in ('inactive', 'retired')">
+                <field name="vehicle_id"/>
+                <field name="issue"/>
+                <field name="cost"/>
+                <field name="service_date"/>
+                <field name="vehicle_status" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_maintenance_form" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.form</field>
+        <field name="model">fleetflow.maintenance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_fleetflow_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_id': vehicle_id}">
+                            <div class="o_stat_info"><span class="o_stat_text">Vehicle</span></div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vehicle_id" options="{'no_create_edit': True}"/>
+                            <field name="issue"/>
+                            <field name="service_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="cost"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fleetflow_maintenance_search" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.search</field>
+        <field name="model">fleetflow.maintenance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="issue"/>
+                <field name="service_date"/>
+                <filter name="vehicle_in_shop" string="In Shop" domain="[('vehicle_status', '=', 'in_shop')]"/>
+                <filter name="vehicle_on_trip" string="On Trip" domain="[('vehicle_status', '=', 'on_trip')]"/>
+                <filter name="vehicle_available" string="Vehicle Available" domain="[('vehicle_status', '=', 'available')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_vehicle" string="Vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_by_service_date" string="Service Date" context="{'group_by': 'service_date'}"/>
+                    <filter name="group_by_vehicle_status" string="Vehicle Status" context="{'group_by': 'vehicle_status'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

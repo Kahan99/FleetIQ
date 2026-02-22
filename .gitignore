@@ -1,0 +1,19 @@
+*.pyc
+__pycache__/
+*.pyo
+*.db
+*.log
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Next.js
+fleetflow-ui/.next/
+fleetflow-ui/node_modules/
+fleetflow-ui/out/
+
+# Node
+node_modules/
+.env
+.env.local

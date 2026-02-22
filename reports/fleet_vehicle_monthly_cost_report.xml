@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_vehicle_monthly_cost_summary" model="ir.actions.report">
+        <field name="name">Monthly Vehicle Cost Summary</field>
+        <field name="model">fleetflow.vehicle</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fleetflow.report_vehicle_monthly_cost_template</field>
+        <field name="report_file">fleetflow.report_vehicle_monthly_cost_template</field>
+        <field name="binding_model_id" ref="model_fleetflow_vehicle"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Monthly Vehicle Cost Summary - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_vehicle_monthly_cost_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="line">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Monthly Vehicle Cost Summary</h2>
+                        <p>
+                            <strong>Vehicle:</strong>
+                            <span t-esc="line['vehicle'].name"/>
+                        </p>
+                        <p>
+                            <strong>Period:</strong>
+                            <span t-esc="line['month_start']"/> - <span t-esc="line['today']"/>
+                        </p>
+
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Fuel Cost</td>
+                                    <td class="text-end">
+                                        <span t-esc="line['fuel_cost']" t-options="{'widget': 'monetary', 'display_currency': line['vehicle'].currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Maintenance Cost</td>
+                                    <td class="text-end">
+                                        <span t-esc="line['maintenance_cost']" t-options="{'widget': 'monetary', 'display_currency': line['vehicle'].currency_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Operational Cost</strong></td>
+                                    <td class="text-end">
+                                        <strong t-esc="line['total_cost']" t-options="{'widget': 'monetary', 'display_currency': line['vehicle'].currency_id}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
