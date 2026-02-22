@@ -9,9 +9,12 @@ __pycache__/
 *.swo
 
 # Next.js
-fleetflow-ui/.next/
-fleetflow-ui/node_modules/
-fleetflow-ui/out/
+fleetiq-ui/.next/
+fleetiq-ui/node_modules/
+fleetiq-ui/out/
+
+# Old folder (kept locally, excluded from git)
+fleetflow-ui/
 
 # Node
 node_modules/

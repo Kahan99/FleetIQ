@@ -36,21 +36,21 @@ def _map(value, mapping):
     return mapping.get(value, value)
 
 
-class FleetFlowAPI(http.Controller):
+class FleetIQAPI(http.Controller):
 
 
     # ── OPTIONS preflight handler ────────────────────────────────────────
     @http.route([
-        '/fleetflow/<path:rest>',
+        '/FleetIQ/<path:rest>',
     ], type='http', auth='none', methods=['OPTIONS'], cors='*', csrf=False)
     def preflight(self, **kw):
         return _json_response({})
 
-    # ━━━━━━━━━ GET  /fleetflow/vehicles ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/vehicles', type='http', auth='public',
+    # ━━━━━━━━━ GET  /FleetIQ/vehicles ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/vehicles', type='http', auth='public',
                 methods=['GET'], cors='*', csrf=False)
     def get_vehicles(self, **kwargs):
-        vehicles = request.env['fleetflow.vehicle'].sudo().search([])
+        vehicles = request.env['FleetIQ.vehicle'].sudo().search([])
         data = []
         for v in vehicles:
             data.append({
@@ -72,11 +72,11 @@ class FleetFlowAPI(http.Controller):
             })
         return _json_response({'status': 'ok', 'count': len(data), 'data': data})
 
-    # ━━━━━━━━━ GET  /fleetflow/drivers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/drivers', type='http', auth='public',
+    # ━━━━━━━━━ GET  /FleetIQ/drivers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/drivers', type='http', auth='public',
                 methods=['GET'], cors='*', csrf=False)
     def get_drivers(self, **kwargs):
-        drivers = request.env['fleetflow.driver'].sudo().search([])
+        drivers = request.env['FleetIQ.driver'].sudo().search([])
         data = []
         for d in drivers:
             data.append({
@@ -90,8 +90,8 @@ class FleetFlowAPI(http.Controller):
             })
         return _json_response({'status': 'ok', 'count': len(data), 'data': data})
 
-    # ━━━━━━━━━ GET  /fleetflow/trips ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/trips', type='http', auth='public',
+    # ━━━━━━━━━ GET  /FleetIQ/trips ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/trips', type='http', auth='public',
                 methods=['GET'], cors='*', csrf=False)
     def get_trips(self, **kwargs):
         domain = []
@@ -103,7 +103,7 @@ class FleetFlowAPI(http.Controller):
         if vehicle_id:
             domain.append(('vehicle_id', '=', int(vehicle_id)))
 
-        trips = request.env['fleetflow.trip'].sudo().search(domain)
+        trips = request.env['FleetIQ.trip'].sudo().search(domain)
         data = []
         for t in trips:
             data.append({
@@ -123,8 +123,8 @@ class FleetFlowAPI(http.Controller):
             })
         return _json_response({'status': 'ok', 'count': len(data), 'data': data})
 
-    # ━━━━━━━━━ POST  /fleetflow/trip/create  (JSON-RPC) ━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/trip/create', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/trip/create  (JSON-RPC) ━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/trip/create', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def create_trip(self, **params):
         try:
@@ -141,7 +141,7 @@ class FleetFlowAPI(http.Controller):
             if params.get('start_odometer'):
                 vals['start_odometer'] = float(params['start_odometer'])
 
-            trip = request.env['fleetflow.trip'].sudo().create(vals)
+            trip = request.env['FleetIQ.trip'].sudo().create(vals)
             return {
                 'status': 'ok',
                 'message': f'Trip {trip.name} created successfully',
@@ -155,13 +155,13 @@ class FleetFlowAPI(http.Controller):
             _logger.exception('Trip creation failed')
             return {'status': 'error', 'message': str(e)}
 
-    # ━━━━━━━━━ POST  /fleetflow/trip/dispatch  (JSON-RPC) ━━━━━━━━━━━━━━
-    @http.route('/fleetflow/trip/dispatch', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/trip/dispatch  (JSON-RPC) ━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/trip/dispatch', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def dispatch_trip(self, **params):
         try:
             trip_id = int(params.get('trip_id', 0))
-            trip = request.env['fleetflow.trip'].sudo().browse(trip_id)
+            trip = request.env['FleetIQ.trip'].sudo().browse(trip_id)
             if not trip.exists():
                 return {'status': 'error', 'message': 'Trip not found'}
             trip.action_dispatch()
@@ -173,13 +173,13 @@ class FleetFlowAPI(http.Controller):
             _logger.exception('Trip dispatch failed')
             return {'status': 'error', 'message': str(e)}
 
-    # ━━━━━━━━━ POST  /fleetflow/trip/complete  (JSON-RPC) ━━━━━━━━━━━━━━
-    @http.route('/fleetflow/trip/complete', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/trip/complete  (JSON-RPC) ━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/trip/complete', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def complete_trip(self, **params):
         try:
             trip_id = int(params.get('trip_id', 0))
-            trip = request.env['fleetflow.trip'].sudo().browse(trip_id)
+            trip = request.env['FleetIQ.trip'].sudo().browse(trip_id)
             if not trip.exists():
                 return {'status': 'error', 'message': 'Trip not found'}
 
@@ -200,8 +200,8 @@ class FleetFlowAPI(http.Controller):
             _logger.exception('Trip completion failed')
             return {'status': 'error', 'message': str(e)}
 
-    # ━━━━━━━━━ POST  /fleetflow/vehicle/create  (JSON-RPC) ━━━━━━━━━━━━━
-    @http.route('/fleetflow/vehicle/create', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/vehicle/create  (JSON-RPC) ━━━━━━━━━━━━━
+    @http.route('/FleetIQ/vehicle/create', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def create_vehicle(self, **params):
         try:
@@ -219,7 +219,7 @@ class FleetFlowAPI(http.Controller):
             if params.get('fuel_type'):
                 vals['fuel_type'] = params['fuel_type']
 
-            vehicle = request.env['fleetflow.vehicle'].sudo().create(vals)
+            vehicle = request.env['FleetIQ.vehicle'].sudo().create(vals)
             return {
                 'status': 'ok',
                 'message': f'Vehicle {vehicle.name} created successfully',
@@ -233,8 +233,8 @@ class FleetFlowAPI(http.Controller):
             _logger.exception('Vehicle creation failed')
             return {'status': 'error', 'message': str(e)}
 
-    # ━━━━━━━━━ POST  /fleetflow/driver/create  (JSON-RPC) ━━━━━━━━━━━━━━
-    @http.route('/fleetflow/driver/create', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/driver/create  (JSON-RPC) ━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/driver/create', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def create_driver(self, **params):
         try:
@@ -249,7 +249,7 @@ class FleetFlowAPI(http.Controller):
             if params.get('phone'):
                 vals['phone'] = params['phone']
 
-            driver = request.env['fleetflow.driver'].sudo().create(vals)
+            driver = request.env['FleetIQ.driver'].sudo().create(vals)
             return {
                 'status': 'ok',
                 'message': f'Driver {driver.name} created successfully',
@@ -262,11 +262,11 @@ class FleetFlowAPI(http.Controller):
         except Exception as e:
             _logger.exception('Driver creation failed')
             return {'status': 'error', 'message': str(e)}
-    # ━━━━━━━━━ GET  /fleetflow/maintenance ━━━━━━━━━━━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/maintenance', type='http', auth='public',
+    # ━━━━━━━━━ GET  /FleetIQ/maintenance ━━━━━━━━━━━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/maintenance', type='http', auth='public',
                 methods=['GET'], cors='*', csrf=False)
     def get_maintenance(self, **kwargs):
-        logs = request.env['fleetflow.maintenance'].sudo().search([])
+        logs = request.env['FleetIQ.maintenance'].sudo().search([])
         data = []
         for l in logs:
             data.append({
@@ -279,8 +279,8 @@ class FleetFlowAPI(http.Controller):
             })
         return _json_response({'status': 'ok', 'count': len(data), 'data': data})
 
-    # ━━━━━━━━━ POST  /fleetflow/maintenance/create  (JSON-RPC) ━━━━━━━
-    @http.route('/fleetflow/maintenance/create', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/maintenance/create  (JSON-RPC) ━━━━━━━
+    @http.route('/FleetIQ/maintenance/create', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def create_maintenance(self, **params):
         try:
@@ -292,7 +292,7 @@ class FleetFlowAPI(http.Controller):
             if params.get('date'):
                 vals['service_date'] = params['date']
             
-            log = request.env['fleetflow.maintenance'].sudo().create(vals)
+            log = request.env['FleetIQ.maintenance'].sudo().create(vals)
             return {
                 'status': 'ok',
                 'message': f'Maintenance log for {log.vehicle_id.name} created',
@@ -302,11 +302,11 @@ class FleetFlowAPI(http.Controller):
             _logger.exception('Maintenance creation failed')
             return {'status': 'error', 'message': str(e)}
 
-    # ━━━━━━━━━ GET  /fleetflow/expenses ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    @http.route('/fleetflow/expenses', type='http', auth='public',
+    # ━━━━━━━━━ GET  /FleetIQ/expenses ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    @http.route('/FleetIQ/expenses', type='http', auth='public',
                 methods=['GET'], cors='*', csrf=False)
     def get_expenses(self, **kwargs):
-        expenses = request.env['fleetflow.expense'].sudo().search([])
+        expenses = request.env['FleetIQ.expense'].sudo().search([])
         data = []
         for e in expenses:
             data.append({
@@ -320,8 +320,8 @@ class FleetFlowAPI(http.Controller):
             })
         return _json_response({'status': 'ok', 'count': len(data), 'data': data})
 
-    # ━━━━━━━━━ POST  /fleetflow/expense/create  (JSON-RPC) ━━━━━━━━━━
-    @http.route('/fleetflow/expense/create', type='json', auth='public',
+    # ━━━━━━━━━ POST  /FleetIQ/expense/create  (JSON-RPC) ━━━━━━━━━━
+    @http.route('/FleetIQ/expense/create', type='json', auth='public',
                 methods=['POST'], cors='*', csrf=False)
     def create_expense(self, **params):
         try:
@@ -335,7 +335,7 @@ class FleetFlowAPI(http.Controller):
             if params.get('date'):
                 vals['expense_date'] = params['date']
 
-            expense = request.env['fleetflow.expense'].sudo().create(vals)
+            expense = request.env['FleetIQ.expense'].sudo().create(vals)
             return {
                 'status': 'ok',
                 'message': f'Expense for {expense.vehicle_id.name} recorded',

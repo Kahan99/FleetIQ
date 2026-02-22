@@ -59,7 +59,7 @@ export default function Sidebar() {
             <Truck className="w-4 h-4 text-white" />
           </div>
           <span className="text-xl font-black text-blue-600 tracking-tight">
-            FleetFlow
+            FleetIQ
           </span>
         </div>
       </div>

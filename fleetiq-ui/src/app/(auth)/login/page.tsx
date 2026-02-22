@@ -21,10 +21,10 @@ const ROLE_BADGE_COLORS: Record<UserRole, string> = {
 };
 
 const DEMO_CREDS: Record<UserRole, { email: string; password: string }> = {
-  fleet_manager: { email: "manager@fleetflow.com", password: "fleet123" },
-  dispatcher: { email: "dispatch@fleetflow.com", password: "fleet123" },
-  safety_officer: { email: "safety@fleetflow.com", password: "fleet123" },
-  financial_analyst: { email: "finance@fleetflow.com", password: "fleet123" },
+  fleet_manager: { email: "manager@FleetIQ.com", password: "fleet123" },
+  dispatcher: { email: "dispatch@FleetIQ.com", password: "fleet123" },
+  safety_officer: { email: "safety@FleetIQ.com", password: "fleet123" },
+  financial_analyst: { email: "finance@FleetIQ.com", password: "fleet123" },
 };
 
 export default function LoginPage() {
@@ -32,7 +32,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   const [selectedRole, setSelectedRole] = useState<UserRole>("fleet_manager");
-  const [email, setEmail] = useState("manager@fleetflow.com");
+  const [email, setEmail] = useState("manager@FleetIQ.com");
   const [password, setPassword] = useState("fleet123");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
@@ -83,7 +83,7 @@ export default function LoginPage() {
               <Truck className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-black text-white tracking-tight">
-              FleetFlow
+              FleetIQ
             </span>
           </div>
           <p className="text-gray-500 text-sm">
@@ -149,7 +149,7 @@ export default function LoginPage() {
                   setError("");
                 }}
                 required
-                placeholder="you@fleetflow.com"
+                placeholder="you@FleetIQ.com"
                 className="w-full px-4 py-3 bg-white/[0.05] border border-white/10 rounded-xl text-white placeholder-gray-600 text-sm focus:outline-none focus:border-blue-500/60 transition-all"
               />
             </div>

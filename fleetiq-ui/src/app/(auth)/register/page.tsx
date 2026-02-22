@@ -78,7 +78,7 @@ export default function RegisterPage() {
                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                             <Truck className="w-5 h-5 text-white" />
                         </div>
-                        <span className="text-2xl font-black text-white tracking-tight">FleetFlow</span>
+                        <span className="text-2xl font-black text-white tracking-tight">FleetIQ</span>
                     </div>
                     <p className="text-gray-500 text-sm">Create your account</p>
                 </div>

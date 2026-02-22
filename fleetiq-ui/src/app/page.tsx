@@ -6,7 +6,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white selection:bg-blue-100 italic font-medium">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <div className="text-2xl font-black text-blue-600 tracking-tighter">FleetFlow</div>
+        <div className="text-2xl font-black text-blue-600 tracking-tighter">FleetIQ</div>
         <div className="flex items-center space-x-8 text-gray-600 font-semibold">
           <a href="#features" className="hover:text-blue-600 transition">Features</a>
           <a href="#" className="hover:text-blue-600 transition">Pricing</a>

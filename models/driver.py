@@ -3,9 +3,9 @@ from odoo.exceptions import ValidationError
 from datetime import date
 
 
-class FleetFlowDriver(models.Model):
-    _name = 'fleetflow.driver'
-    _description = 'FleetFlow Driver'
+class FleetIQDriver(models.Model):
+    _name = 'FleetIQ.driver'
+    _description = 'FleetIQ Driver'
 
     name = fields.Char(required=True)
     license_number = fields.Char()
@@ -26,7 +26,7 @@ class FleetFlowDriver(models.Model):
     safety_score = fields.Float(compute='_compute_safety_score', store=True)
     completion_rate = fields.Float(compute='_compute_completion_rate', store=True)
     is_license_expired = fields.Boolean(compute='_compute_is_license_expired')
-    trip_ids = fields.One2many('fleetflow.trip', 'driver_id', string='Trips')
+    trip_ids = fields.One2many('FleetIQ.trip', 'driver_id', string='Trips')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
 
     @api.depends('trip_ids.state', 'license_expiry')

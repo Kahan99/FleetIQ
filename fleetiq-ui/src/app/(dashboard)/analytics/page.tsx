@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `fleetflow_analytics_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `FleetIQ_analytics_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -102,10 +102,10 @@ export default function AnalyticsPage() {
       .join("");
 
     printWindow.document.write(`
-            <html><head><title>FleetFlow Analytics Report</title>
+            <html><head><title>FleetIQ Analytics Report</title>
             <style>body{font-family:Arial,sans-serif;padding:40px}table{border-collapse:collapse;width:100%}th{background:#1e40af;color:white;padding:10px;border:1px solid #ddd}h1{color:#1e40af}h3{margin-top:30px;color:#374151}.summary{display:flex;gap:20px;margin:20px 0}.card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:16px;flex:1;text-align:center}.card .val{font-size:24px;font-weight:bold;color:#1e40af}.card .label{font-size:12px;color:#6b7280;text-transform:uppercase}</style>
             </head><body>
-            <h1>FleetFlow — Operational Analytics Report</h1>
+            <h1>FleetIQ — Operational Analytics Report</h1>
             <p>Generated: ${new Date().toLocaleString()}</p>
             <div class="summary">
                 <div class="card"><div class="val">₹${data.totals.totalRevenue.toLocaleString()}</div><div class="label">Total Revenue</div></div>
@@ -119,7 +119,7 @@ export default function AnalyticsPage() {
                 <th>Fuel Cost</th><th>Maint. Cost</th><th>Total OpCost</th>
                 <th>Efficiency</th><th>ROI</th>
             </tr></thead><tbody>${tableRows}</tbody></table>
-            <p style="margin-top:30px;color:#9ca3af;font-size:12px">FleetFlow Analytics — Confidential</p>
+            <p style="margin-top:30px;color:#9ca3af;font-size:12px">FleetIQ Analytics — Confidential</p>
             </body></html>
         `);
     printWindow.document.close();

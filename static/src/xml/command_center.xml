@@ -2,12 +2,12 @@
 <templates xml:space="preserve">
 
 <!--
-    FleetFlow Command Center — OWL 2 QWeb Template (Odoo 17)
+    FleetIQ Command Center — OWL 2 QWeb Template (Odoo 17)
     Component: CommandCenterDashboard
-    Registered as: fleetflow.CommandCenter
+    Registered as: FleetIQ.CommandCenter
 -->
 
-<t t-name="fleetflow.CommandCenter" owl="1">
+<t t-name="FleetIQ.CommandCenter" owl="1">
   <div class="ff-cc-root">
 
     <!-- ── Header ──────────────────────────────────────────── -->

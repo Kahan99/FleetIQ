@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_fleetflow_expense_tree" model="ir.ui.view">
-        <field name="name">fleetflow.expense.tree</field>
-        <field name="model">fleetflow.expense</field>
+    <record id="view_FleetIQ_expense_tree" model="ir.ui.view">
+        <field name="name">FleetIQ.expense.tree</field>
+        <field name="model">FleetIQ.expense</field>
         <field name="arch" type="xml">
             <tree decoration-success="trip_state == 'completed'" decoration-warning="trip_state == 'dispatched'" decoration-info="trip_state == 'draft'" decoration-muted="trip_state == 'cancelled'">
                 <field name="vehicle_id"/>
@@ -17,17 +17,17 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_expense_form" model="ir.ui.view">
-        <field name="name">fleetflow.expense.form</field>
-        <field name="model">fleetflow.expense</field>
+    <record id="view_FleetIQ_expense_form" model="ir.ui.view">
+        <field name="name">FleetIQ.expense.form</field>
+        <field name="model">FleetIQ.expense</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_fleetflow_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_id': trip_id}">
+                        <button name="%(action_FleetIQ_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_id': trip_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Trip</span></div>
                         </button>
-                        <button name="%(action_fleetflow_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_id': vehicle_id}">
+                        <button name="%(action_FleetIQ_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_id': vehicle_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Vehicle</span></div>
                         </button>
                     </div>
@@ -49,9 +49,9 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_expense_search" model="ir.ui.view">
-        <field name="name">fleetflow.expense.search</field>
-        <field name="model">fleetflow.expense</field>
+    <record id="view_FleetIQ_expense_search" model="ir.ui.view">
+        <field name="name">FleetIQ.expense.search</field>
+        <field name="model">FleetIQ.expense</field>
         <field name="arch" type="xml">
             <search>
                 <field name="vehicle_id"/>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_FleetIQ_root" name="FleetIQ" sequence="10" groups="FleetIQ.group_FleetIQ_user"/>
+
+    <menuitem id="menu_FleetIQ_operations" name="Operations" parent="menu_FleetIQ_root" sequence="10"/>
+    <menuitem id="menu_FleetIQ_configuration" name="Configuration" parent="menu_FleetIQ_root" sequence="20" groups="FleetIQ.group_FleetIQ_manager"/>
+
+    <!-- Command Center — Manager + Dispatcher only, top of Operations -->
+    <menuitem id="menu_FleetIQ_command_center"
+              name="Command Center"
+              parent="menu_FleetIQ_operations"
+              action="action_FleetIQ_command_center"
+              sequence="1"
+              groups="FleetIQ.group_FleetIQ_manager,FleetIQ.group_FleetIQ_dispatcher"/>
+
+    <menuitem id="menu_FleetIQ_dashboard" name="Dashboard" parent="menu_FleetIQ_operations" action="action_FleetIQ_dashboard" sequence="5"/>
+    <menuitem id="menu_FleetIQ_trips" name="Trips" parent="menu_FleetIQ_operations" action="action_FleetIQ_trip" sequence="10"/>
+    <menuitem id="menu_FleetIQ_maintenance" name="Maintenance" parent="menu_FleetIQ_operations" action="action_FleetIQ_maintenance" sequence="20"/>
+    <menuitem id="menu_FleetIQ_expenses" name="Expenses" parent="menu_FleetIQ_operations" action="action_FleetIQ_expense" sequence="30"/>
+
+    <menuitem id="menu_FleetIQ_vehicles" name="Vehicles" parent="menu_FleetIQ_configuration" action="action_FleetIQ_vehicle" sequence="10"/>
+    <menuitem id="menu_FleetIQ_drivers" name="Drivers" parent="menu_FleetIQ_configuration" action="action_FleetIQ_driver" sequence="20"/>
+</odoo>

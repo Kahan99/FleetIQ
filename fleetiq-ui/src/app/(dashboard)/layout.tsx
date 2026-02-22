@@ -22,7 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-3">
                     <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                    <p className="text-gray-400 text-sm">Loading FleetFlow…</p>
+                    <p className="text-gray-400 text-sm">Loading FleetIQ…</p>
                 </div>
             </div>
         );

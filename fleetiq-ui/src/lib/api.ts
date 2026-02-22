@@ -369,15 +369,15 @@ function jsonrpcPayload(params: any) {
 function demoBranch(endpoint: string) {
   const path = endpoint.split("?")[0];
   switch (path) {
-    case "/fleetflow/vehicles":
+    case "/FleetIQ/vehicles":
       return { data: mockVehicles };
-    case "/fleetflow/drivers":
+    case "/FleetIQ/drivers":
       return { data: mockDrivers };
-    case "/fleetflow/trips":
+    case "/FleetIQ/trips":
       return { data: mockTrips };
-    case "/fleetflow/maintenance":
+    case "/FleetIQ/maintenance":
       return { data: mockMaintenance };
-    case "/fleetflow/expenses":
+    case "/FleetIQ/expenses":
       return { data: mockExpenses };
     default:
       return { data: [] };
@@ -386,7 +386,7 @@ function demoBranch(endpoint: string) {
 
 function demoMutate(endpoint: string, params: any) {
   switch (endpoint) {
-    case "/fleetflow/vehicle/create": {
+    case "/FleetIQ/vehicle/create": {
       const v = {
         id: nextId(),
         status: "available",
@@ -401,7 +401,7 @@ function demoMutate(endpoint: string, params: any) {
       mockVehicles = [...mockVehicles, v];
       return v;
     }
-    case "/fleetflow/vehicle/toggle_oos": {
+    case "/FleetIQ/vehicle/toggle_oos": {
       mockVehicles = mockVehicles.map((v) =>
         v.id === params.vehicle_id
           ? {
@@ -413,7 +413,7 @@ function demoMutate(endpoint: string, params: any) {
       );
       return { success: true };
     }
-    case "/fleetflow/driver/create": {
+    case "/FleetIQ/driver/create": {
       const d = {
         id: nextId(),
         status: "on_duty",
@@ -425,13 +425,13 @@ function demoMutate(endpoint: string, params: any) {
       mockDrivers = [...mockDrivers, d];
       return d;
     }
-    case "/fleetflow/driver/toggle_status": {
+    case "/FleetIQ/driver/toggle_status": {
       mockDrivers = mockDrivers.map((d) =>
         d.id === params.driver_id ? { ...d, status: params.status } : d,
       );
       return { success: true };
     }
-    case "/fleetflow/trip/create": {
+    case "/FleetIQ/trip/create": {
       // Cargo weight validation
       const vehicle = mockVehicles.find((v) => v.id === params.vehicle_id);
       const driver = mockDrivers.find((d) => d.id === params.driver_id);
@@ -461,7 +461,7 @@ function demoMutate(endpoint: string, params: any) {
       mockTrips = [...mockTrips, t];
       return t;
     }
-    case "/fleetflow/trip/dispatch": {
+    case "/FleetIQ/trip/dispatch": {
       const trip = mockTrips.find((t) => t.id === params.trip_id);
       // Update trip state
       mockTrips = mockTrips.map((t) =>
@@ -478,7 +478,7 @@ function demoMutate(endpoint: string, params: any) {
       }
       return { success: true };
     }
-    case "/fleetflow/trip/complete": {
+    case "/FleetIQ/trip/complete": {
       const trip = mockTrips.find((t) => t.id === params.trip_id);
       mockTrips = mockTrips.map((t) =>
         t.id === params.trip_id
@@ -502,7 +502,7 @@ function demoMutate(endpoint: string, params: any) {
       }
       return { success: true };
     }
-    case "/fleetflow/trip/cancel": {
+    case "/FleetIQ/trip/cancel": {
       const trip = mockTrips.find((t) => t.id === params.trip_id);
       mockTrips = mockTrips.map((t) =>
         t.id === params.trip_id ? { ...t, state: "cancelled" } : t,
@@ -518,7 +518,7 @@ function demoMutate(endpoint: string, params: any) {
       }
       return { success: true };
     }
-    case "/fleetflow/maintenance/create": {
+    case "/FleetIQ/maintenance/create": {
       const vehicle = mockVehicles.find((v) => v.id === params.vehicle_id);
       const m = {
         id: nextId(),
@@ -533,7 +533,7 @@ function demoMutate(endpoint: string, params: any) {
       );
       return m;
     }
-    case "/fleetflow/expense/create": {
+    case "/FleetIQ/expense/create": {
       const vehicle = mockVehicles.find((v) => v.id === params.vehicle_id);
       const trip = mockTrips.find((t) => t.id === params.trip_id);
       const e = {
@@ -553,39 +553,39 @@ function demoMutate(endpoint: string, params: any) {
 
 // ── Vehicles ────────────────────────────────────────────────────────
 export async function getVehicles() {
-  const res = await apiFetch("/fleetflow/vehicles");
+  const res = await apiFetch("/FleetIQ/vehicles");
   return res.data;
 }
 
 export async function createVehicle(data: any) {
-  return apiPostJson("/fleetflow/vehicle/create", data);
+  return apiPostJson("/FleetIQ/vehicle/create", data);
 }
 
 // ── Drivers ─────────────────────────────────────────────────────────
 export async function getDrivers() {
-  const res = await apiFetch("/fleetflow/drivers");
+  const res = await apiFetch("/FleetIQ/drivers");
   return res.data;
 }
 
 export async function createDriver(data: any) {
-  return apiPostJson("/fleetflow/driver/create", data);
+  return apiPostJson("/FleetIQ/driver/create", data);
 }
 
 // ── Trips ───────────────────────────────────────────────────────────
 export async function getTrips(state?: string) {
   const endpoint = state
-    ? `/fleetflow/trips?state=${state}`
-    : "/fleetflow/trips";
+    ? `/FleetIQ/trips?state=${state}`
+    : "/FleetIQ/trips";
   const res = await apiFetch(endpoint);
   return res.data;
 }
 
 export async function createTrip(data: any) {
-  return apiPostJson("/fleetflow/trip/create", data);
+  return apiPostJson("/FleetIQ/trip/create", data);
 }
 
 export async function dispatchTrip(tripId: number) {
-  return apiPostJson("/fleetflow/trip/dispatch", { trip_id: tripId });
+  return apiPostJson("/FleetIQ/trip/dispatch", { trip_id: tripId });
 }
 
 export async function completeTrip(params: {
@@ -593,11 +593,11 @@ export async function completeTrip(params: {
   end_odometer: number;
   revenue?: number;
 }) {
-  return apiPostJson("/fleetflow/trip/complete", params);
+  return apiPostJson("/FleetIQ/trip/complete", params);
 }
 // ── Maintenance ────────────────────────────────────────────────────
 export async function getMaintenance() {
-  const res = await apiFetch("/fleetflow/maintenance");
+  const res = await apiFetch("/FleetIQ/maintenance");
   return res.data;
 }
 
@@ -607,12 +607,12 @@ export async function createMaintenance(data: {
   cost: number;
   date?: string;
 }) {
-  return apiPostJson("/fleetflow/maintenance/create", data);
+  return apiPostJson("/FleetIQ/maintenance/create", data);
 }
 
 // ── Expenses ───────────────────────────────────────────────────────
 export async function getExpenses() {
-  const res = await apiFetch("/fleetflow/expenses");
+  const res = await apiFetch("/FleetIQ/expenses");
   return res.data;
 }
 
@@ -623,19 +623,19 @@ export async function createExpense(data: {
   trip_id?: number;
   date?: string;
 }) {
-  return apiPostJson("/fleetflow/expense/create", data);
+  return apiPostJson("/FleetIQ/expense/create", data);
 }
 
 // ── Vehicle Toggle Out-of-Service ──────────────────────────────────
 export async function toggleVehicleOOS(vehicleId: number) {
-  return apiPostJson("/fleetflow/vehicle/toggle_oos", {
+  return apiPostJson("/FleetIQ/vehicle/toggle_oos", {
     vehicle_id: vehicleId,
   });
 }
 
 // ── Driver Status Toggle ───────────────────────────────────────────
 export async function toggleDriverStatus(driverId: number, status: string) {
-  return apiPostJson("/fleetflow/driver/toggle_status", {
+  return apiPostJson("/FleetIQ/driver/toggle_status", {
     driver_id: driverId,
     status,
   });
@@ -643,7 +643,7 @@ export async function toggleDriverStatus(driverId: number, status: string) {
 
 // ── Cancel Trip ────────────────────────────────────────────────────
 export async function cancelTrip(tripId: number) {
-  return apiPostJson("/fleetflow/trip/cancel", { trip_id: tripId });
+  return apiPostJson("/FleetIQ/trip/cancel", { trip_id: tripId });
 }
 
 // ── Analytics helpers (computed from mock data) ────────────────────

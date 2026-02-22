@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_fleetflow_vehicle_tree" model="ir.ui.view">
-        <field name="name">fleetflow.vehicle.tree</field>
-        <field name="model">fleetflow.vehicle</field>
+    <record id="view_FleetIQ_vehicle_tree" model="ir.ui.view">
+        <field name="name">FleetIQ.vehicle.tree</field>
+        <field name="model">FleetIQ.vehicle</field>
         <field name="arch" type="xml">
             <tree decoration-success="status == 'available'" decoration-warning="status in ('on_trip', 'in_service')" decoration-danger="status in ('in_shop', 'maintenance')" decoration-muted="status in ('inactive', 'retired')">
                 <field name="name"/>
@@ -20,9 +20,9 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_vehicle_kanban" model="ir.ui.view">
-        <field name="name">fleetflow.vehicle.kanban</field>
-        <field name="model">fleetflow.vehicle</field>
+    <record id="view_FleetIQ_vehicle_kanban" model="ir.ui.view">
+        <field name="name">FleetIQ.vehicle.kanban</field>
+        <field name="model">FleetIQ.vehicle</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
                 <field name="name"/>
@@ -68,9 +68,9 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_vehicle_form" model="ir.ui.view">
-        <field name="name">fleetflow.vehicle.form</field>
-        <field name="model">fleetflow.vehicle</field>
+    <record id="view_FleetIQ_vehicle_form" model="ir.ui.view">
+        <field name="name">FleetIQ.vehicle.form</field>
+        <field name="model">FleetIQ.vehicle</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -109,13 +109,13 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_fleetflow_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                        <button name="%(action_FleetIQ_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Trips</span></div>
                         </button>
-                        <button name="%(action_fleetflow_maintenance)d" type="action" class="oe_stat_button" icon="fa-wrench" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                        <button name="%(action_FleetIQ_maintenance)d" type="action" class="oe_stat_button" icon="fa-wrench" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Maintenance</span></div>
                         </button>
-                        <button name="%(action_fleetflow_expense)d" type="action" class="oe_stat_button" icon="fa-money" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
+                        <button name="%(action_FleetIQ_expense)d" type="action" class="oe_stat_button" icon="fa-money" context="{'search_default_vehicle_id': active_id, 'default_vehicle_id': active_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Expenses</span></div>
                         </button>
                     </div>
@@ -208,9 +208,9 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_vehicle_search" model="ir.ui.view">
-        <field name="name">fleetflow.vehicle.search</field>
-        <field name="model">fleetflow.vehicle</field>
+    <record id="view_FleetIQ_vehicle_search" model="ir.ui.view">
+        <field name="name">FleetIQ.vehicle.search</field>
+        <field name="model">FleetIQ.vehicle</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_fleetflow_dashboard_kanban" model="ir.ui.view">
-        <field name="name">fleetflow.dashboard.kanban</field>
-        <field name="model">fleetflow.dashboard</field>
+    <record id="view_FleetIQ_dashboard_kanban" model="ir.ui.view">
+        <field name="name">FleetIQ.dashboard.kanban</field>
+        <field name="model">FleetIQ.dashboard</field>
         <field name="arch" type="xml">
             <kanban create="false" delete="false" edit="false" class="o_kanban_dashboard">
                 <field name="active_fleet_count"/>
@@ -60,9 +60,9 @@
         </field>
     </record>
 
-    <record id="view_fleetflow_dashboard_form" model="ir.ui.view">
-        <field name="name">fleetflow.dashboard.form</field>
-        <field name="model">fleetflow.dashboard</field>
+    <record id="view_FleetIQ_dashboard_form" model="ir.ui.view">
+        <field name="name">FleetIQ.dashboard.form</field>
+        <field name="model">FleetIQ.dashboard</field>
         <field name="arch" type="xml">
             <form create="false" delete="false" edit="false">
                 <sheet>

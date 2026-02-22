@@ -7,15 +7,15 @@ from odoo.exceptions import ValidationError
 from datetime import date
 
 
-class FleetFlowTrip(models.Model):
-    _name = 'fleetflow.trip'
-    _description = 'FleetFlow Trip'
+class FleetIQTrip(models.Model):
+    _name = 'FleetIQ.trip'
+    _description = 'FleetIQ Trip'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name desc'
 
     name = fields.Char(string='Trip Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: 'New')
-    vehicle_id = fields.Many2one('fleetflow.vehicle', string='Vehicle', required=True)
-    driver_id = fields.Many2one('fleetflow.driver', string='Driver', required=True)
+    vehicle_id = fields.Many2one('FleetIQ.vehicle', string='Vehicle', required=True)
+    driver_id = fields.Many2one('FleetIQ.driver', string='Driver', required=True)
     cargo_weight = fields.Float(string='Cargo Weight (Tons)')
     origin = fields.Char(string='Origin', required=True)
     destination = fields.Char(string='Destination', required=True)
@@ -29,7 +29,7 @@ class FleetFlowTrip(models.Model):
     start_odometer = fields.Float(string='Start Odometer')
     end_odometer = fields.Float(string='End Odometer')
     company_id = fields.Many2one(related='vehicle_id.company_id', store=True, readonly=True)
-    expense_ids = fields.One2many('fleetflow.expense', 'trip_id', string='Expenses')
+    expense_ids = fields.One2many('FleetIQ.expense', 'trip_id', string='Expenses')
     # Read-only helper: mirrors vehicle max_capacity so the trip form can display
     # a capacity warning without using invalid relational dot-path XML field refs.
     vehicle_max_capacity = fields.Float(
@@ -65,7 +65,7 @@ class FleetFlowTrip(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if vals.get('name', 'New') == 'New':
-                vals['name'] = self.env['ir.sequence'].next_by_code('fleetflow.trip') or 'New'
+                vals['name'] = self.env['ir.sequence'].next_by_code('FleetIQ.trip') or 'New'
         return super().create(vals_list)
 
     def action_dispatch(self):
@@ -146,11 +146,11 @@ class FleetFlowTrip(models.Model):
 
         csv_content = buffer.getvalue().encode('utf-8')
         attachment = self.env['ir.attachment'].create({
-            'name': 'fleetflow_trips_export.csv',
+            'name': 'FleetIQ_trips_export.csv',
             'type': 'binary',
             'datas': base64.b64encode(csv_content),
             'mimetype': 'text/csv',
-            'res_model': 'fleetflow.trip',
+            'res_model': 'FleetIQ.trip',
         })
 
         return {

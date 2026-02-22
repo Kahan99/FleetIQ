@@ -14,11 +14,11 @@ class CommandCenterController(http.Controller):
     client action calls via fetch() to refresh KPI data.
 
     Auth: 'user'  → standard Odoo session cookie – RBAC is enforced
-    by ir.model.access rules on fleetflow.vehicle / fleetflow.trip.
+    by ir.model.access rules on FleetIQ.vehicle / FleetIQ.trip.
     """
 
     @http.route(
-        '/fleetflow/command_center/data',
+        '/FleetIQ/command_center/data',
         type='json',
         auth='user',
         methods=['POST'],
@@ -30,11 +30,11 @@ class CommandCenterController(http.Controller):
 
         Called by the QWeb client action template via fetch().
         Only Fleet Managers and Dispatchers have the ir.model.access
-        rights to read fleetflow.vehicle, so an AccessError is raised
+        rights to read FleetIQ.vehicle, so an AccessError is raised
         automatically for other roles.
         """
         try:
-            data = request.env['fleetflow.vehicle'].get_command_center_data(
+            data = request.env['FleetIQ.vehicle'].get_command_center_data(
                 vehicle_type=vehicle_type or None,
                 vehicle_status=vehicle_status or None,
             )

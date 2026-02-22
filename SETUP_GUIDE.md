@@ -84,10 +84,10 @@ Copy or symlink your modules here. For example, to link your hackathon project:
 
 ```powershell
 # Option A: Copy
-Copy-Item -Recurse "C:\Users\meeto\OneDrive\Desktop\odoo-hackathon-2026\fleetflow" "C:\odoo-dev\custom-addons\fleetflow"
+Copy-Item -Recurse "C:\Users\meeto\OneDrive\Desktop\odoo-hackathon-2026\FleetIQ" "C:\odoo-dev\custom-addons\FleetIQ"
 
 # Option B: Symlink (run PowerShell as Administrator)
-New-Item -ItemType SymbolicLink -Path "C:\odoo-dev\custom-addons\fleetflow" -Target "C:\Users\meeto\OneDrive\Desktop\odoo-hackathon-2026\fleetflow"
+New-Item -ItemType SymbolicLink -Path "C:\odoo-dev\custom-addons\FleetIQ" -Target "C:\Users\meeto\OneDrive\Desktop\odoo-hackathon-2026\FleetIQ"
 ```
 
 ## Step 7: Create `odoo.conf`
@@ -134,8 +134,8 @@ Default credentials: **admin / admin**
 
 | Flag | Purpose |
 |---|---|
-| `-i fleetflow` | Install a module on startup |
-| `-u fleetflow` | Update a module on startup |
+| `-i FleetIQ` | Install a module on startup |
+| `-u FleetIQ` | Update a module on startup |
 | `--dev=all` | Enable dev mode (auto-reload Python + XML) |
 | `-d odoo17` | Specify database |
 | `--stop-after-init` | Exit after init (useful for scripted installs) |
@@ -143,7 +143,7 @@ Default credentials: **admin / admin**
 **Example — install your module:**
 
 ```powershell
-python odoo\odoo-bin -c odoo.conf -i fleetflow
+python odoo\odoo-bin -c odoo.conf -i FleetIQ
 ```
 
 **Example — dev mode with auto-reload:**
@@ -182,7 +182,7 @@ python odoo\odoo-bin -c odoo.conf -u your_module_name
 |---|---|---|
 | `FATAL: password authentication failed for user "odoo17"` | Wrong PG credentials | Verify user/password in pgAdmin; check `pg_hba.conf` uses `md5` or `scram-sha-256` |
 | `port 8069 already in use` | Another Odoo instance running | Kill the process: `Stop-Process -Name python -Force` or change `http_port` in `odoo.conf` |
-| `Module fleetflow not found` | Module not in `addons_path` | Verify `addons_path` in `odoo.conf` includes your custom addons directory |
+| `Module FleetIQ not found` | Module not in `addons_path` | Verify `addons_path` in `odoo.conf` includes your custom addons directory |
 | `ModuleNotFoundError: No module named 'odoo'` | venv not activated or wrong Python | Activate venv first; ensure you're using the venv Python |
 | `relation "ir_module_module" does not exist` | Empty/corrupt database | Drop and recreate the database, then reinitialize |
 | `could not connect to server` | PostgreSQL not running | Start PostgreSQL service: `net start postgresql-x64-16` (adjust version) |
@@ -205,10 +205,10 @@ python odoo\odoo-bin -c odoo.conf
 python odoo\odoo-bin -c odoo.conf --dev=all
 
 # Install module
-python odoo\odoo-bin -c odoo.conf -i fleetflow
+python odoo\odoo-bin -c odoo.conf -i FleetIQ
 
 # Update module
-python odoo\odoo-bin -c odoo.conf -u fleetflow
+python odoo\odoo-bin -c odoo.conf -u FleetIQ
 
 # Run Odoo shell (interactive Python with Odoo env)
 python odoo\odoo-bin shell -c odoo.conf -d odoo17

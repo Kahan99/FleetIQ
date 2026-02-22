@@ -1,8 +1,8 @@
 from odoo import api, fields, models
 
 
-class FleetflowDashboard(models.Model):
-    _name = 'fleetflow.dashboard'
+class FleetIQDashboard(models.Model):
+    _name = 'FleetIQ.dashboard'
     _description = 'Fleet Dashboard'
 
     name = fields.Char(required=True, default='Fleet Dashboard')
@@ -19,8 +19,8 @@ class FleetflowDashboard(models.Model):
     def get_dashboard_data(self):
         self.ensure_one()
 
-        vehicle_obj = self.env['fleetflow.vehicle']
-        trip_obj = self.env['fleetflow.trip']
+        vehicle_obj = self.env['FleetIQ.vehicle']
+        trip_obj = self.env['FleetIQ.trip']
 
         fleet_domain = [
             ('company_id', '=', self.company_id.id),

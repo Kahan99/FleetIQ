@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 /**
- * FleetFlow – Command Center Client Action (Odoo 17 / OWL 2)
+ * FleetIQ – Command Center Client Action (Odoo 17 / OWL 2)
  *
- * Registers as the "fleetflow_command_center" client action tag.
- * Fetches KPI data from /fleetflow/command_center/data via JSON-RPC.
+ * Registers as the "FleetIQ_command_center" client action tag.
+ * Fetches KPI data from /FleetIQ/command_center/data via JSON-RPC.
  * QWeb template is in static/src/xml/command_center.xml.
  */
 
@@ -34,7 +34,7 @@ const TRIP_STATE_LABEL = {
 
 // ── OWL Component ────────────────────────────────────────────────────
 export class CommandCenterDashboard extends Component {
-  static template = "fleetflow.CommandCenter";
+  static template = "FleetIQ.CommandCenter";
   static props = {};
 
   setup() {
@@ -79,7 +79,7 @@ export class CommandCenterDashboard extends Component {
         vehicle_type: this.state.vehicle_type || null,
         vehicle_status: this.state.vehicle_status || null,
       };
-      const result = await this.rpc("/fleetflow/command_center/data", payload);
+      const result = await this.rpc("/FleetIQ/command_center/data", payload);
 
       if (!result || result.error) {
         this.state.error = (result && result.message) || "Server error. Please retry.";
@@ -161,4 +161,4 @@ export class CommandCenterDashboard extends Component {
 }
 
 // ── Register as Odoo client action ───────────────────────────────────
-registry.category("actions").add("fleetflow_command_center", CommandCenterDashboard);
+registry.category("actions").add("FleetIQ_command_center", CommandCenterDashboard);
