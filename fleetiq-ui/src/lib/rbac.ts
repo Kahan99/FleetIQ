@@ -8,8 +8,7 @@ export type AppRoute =
   | "/drivers"
   | "/maintenance"
   | "/expenses"
-  | "/analytics"
-  | "/settings";
+  | "/analytics";
 
 // What each role can access
 export const ROLE_PERMISSIONS: Record<UserRole, AppRoute[]> = {
@@ -21,9 +20,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, AppRoute[]> = {
     "/maintenance",
     "/expenses",
     "/analytics",
-    "/settings",
   ],
-  dispatcher: ["/dashboard", "/trips"],
+  dispatcher: ["/dashboard", "/trips", "/vehicles", "/drivers"],
   safety_officer: ["/dashboard", "/drivers", "/maintenance"],
   financial_analyst: ["/dashboard", "/vehicles", "/expenses", "/analytics"],
 };
@@ -44,7 +42,6 @@ export const ALL_NAV_ITEMS: NavItem[] = [
   { title: "Maintenance", href: "/maintenance", icon: "Wrench" },
   { title: "Expenses", href: "/expenses", icon: "CreditCard" },
   { title: "Analytics", href: "/analytics", icon: "BarChart3" },
-  { title: "Settings", href: "/settings", icon: "Settings" },
 ];
 
 export function getNavItemsForRole(role: UserRole): NavItem[] {
@@ -54,7 +51,9 @@ export function getNavItemsForRole(role: UserRole): NavItem[] {
 
 export function canAccess(role: UserRole, route: string): boolean {
   const allowed = ROLE_PERMISSIONS[role] as string[];
-  return allowed.includes(route);
+  return allowed.some(
+    (allowedRoute) => route === allowedRoute || route.startsWith(`${allowedRoute}/`)
+  );
 }
 
 // Role descriptions and colors for RBAC UI
@@ -85,18 +84,17 @@ export const ROLE_META: Record<
       "Maintenance",
       "Expenses",
       "Analytics",
-      "Settings",
     ],
   },
   dispatcher: {
     label: "Dispatcher",
     description:
-      "Create, dispatch, and manage trips. Cannot access financials or settings.",
+      "Create, dispatch, and manage trips. Can view vehicles and drivers.",
     color: "text-emerald-600",
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-200",
     accentColor: "bg-emerald-600",
-    capabilities: ["Trips", "Dashboard"],
+    capabilities: ["Trips", "Vehicles (read)", "Drivers (read)", "Dashboard"],
   },
   safety_officer: {
     label: "Safety Officer",
