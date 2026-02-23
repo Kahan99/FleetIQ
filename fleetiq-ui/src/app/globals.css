@@ -1,19 +1,21 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #f9fafb;
+  --color-background: #ffffff;
   --color-foreground: #111827;
   --color-primary: #2563eb;
   --color-primary-light: #3b82f6;
   --color-primary-dark: #1d4ed8;
-  --color-success: #16a34a;
-  --color-success-light: #22c55e;
+  --color-success: #10b981;
   --color-warning: #f59e0b;
-  --color-warning-light: #fbbf24;
-  --color-danger: #dc2626;
-  --color-danger-light: #ef4444;
+  --color-danger: #ef4444;
   --color-surface: #ffffff;
   --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-card-bg: #ffffff;
+  --radius-card: 20px;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-display: "Poppins", system-ui, -apple-system, sans-serif;
 }
@@ -40,13 +42,16 @@ body {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
@@ -64,6 +69,7 @@ textarea {
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
+
 .card-hover:hover {
   transform: translateY(-2px);
   box-shadow:
@@ -78,19 +84,42 @@ textarea {
   background-clip: text;
 }
 
-@keyframes pulse-dot {
-  0%,
-  100% {
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
     opacity: 1;
+    transform: translateY(0);
   }
-  50% {
-    opacity: 0.4;
-  }
-}
-.pulse-dot {
-  animation: pulse-dot 2s ease-in-out infinite;
 }
 
-.table-row-hover:hover {
-  background-color: rgba(37, 99, 235, 0.02);
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+}
+
+.card-premium {
+  background: var(--color-surface);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow-soft);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.card-premium:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-premium);
+  border-color: rgba(37, 99, 235, 0.1);
 }

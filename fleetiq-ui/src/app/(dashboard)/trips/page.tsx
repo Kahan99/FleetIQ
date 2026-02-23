@@ -1,155 +1,148 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
-import { Navigation, Plus, X, Loader2, Send, CheckCircle2, XCircle, Clock, Search, MapPin, ArrowRight } from "lucide-react";
-import { getTrips, getVehicles, getDrivers, createTrip, dispatchTrip, completeTrip, cancelTrip } from "@/lib/api";
-
-const TRIP_BADGE: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-500",
-  dispatched: "bg-[#2563EB]/10 text-[#2563EB]",
-  in_progress: "bg-[#F59E0B]/10 text-[#F59E0B]",
-  completed: "bg-[#16A34A]/10 text-[#16A34A]",
-  cancelled: "bg-[#DC2626]/10 text-[#DC2626]",
-};
+import { Route, Plus, Search, Filter, Calendar, MapPin, Truck as TruckIcon, User, Package, Loader2 } from "lucide-react";
+import { getTrips } from "@/lib/api";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Table, TableRow, TableCell } from "@/components/ui/Table";
 
 export default function TripsPage() {
   const [trips, setTrips] = useState<any[]>([]);
-  const [vehicles, setVehicles] = useState<any[]>([]);
-  const [drivers, setDrivers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [form, setForm] = useState({ origin: "", destination: "", vehicle_id: "", driver_id: "", cargo_weight: "", notes: "" });
+  const [showNewTripModal, setShowNewTripModal] = useState(false);
 
-  const fetchAll = async () => {
-    try { setLoading(true); const [t, v, d] = await Promise.all([getTrips(), getVehicles(), getDrivers()]); setTrips(t); setVehicles(v); setDrivers(d); } catch {} finally { setLoading(false); }
-  };
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const data = await getTrips();
+        setTrips(data);
+      } catch (error) {
+        console.error("Failed to fetch trips:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTrips();
+  }, []);
 
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.origin || !form.destination || !form.vehicle_id || !form.driver_id) return alert("Fill all required fields");
-    try { await createTrip({ ...form, vehicle_id: +form.vehicle_id, driver_id: +form.driver_id, cargo_weight: parseFloat(form.cargo_weight) || 0 }); setForm({ origin: "", destination: "", vehicle_id: "", driver_id: "", cargo_weight: "", notes: "" }); fetchAll(); } catch (err) { alert("Failed: " + err); }
-  };
-
-  const filtered = trips.filter(t => (t.origin + t.destination + t.name).toLowerCase().includes(search.toLowerCase()));
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center p-32 gap-4">
+      <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+      <p className="text-sm text-gray-400 font-medium">Loading Trips...</p>
+    </div>
+  );
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>Trip Dispatcher</h1>
-        <p className="text-sm text-gray-500 mt-1">Schedule and manage fleet deliveries</p>
+    <div className="space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
+            Trips & Logistics
+          </h1>
+          <p className="text-gray-500 mt-1">Plan, dispatch, and track your fleet deliveries.</p>
+        </div>
+        <Button leftIcon={<Plus className="w-4 h-4" />}>
+          Create New Trip
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Left - New Trip Form */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm sticky top-6">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2"><Plus className="w-4 h-4 text-[#2563EB]" /> New Trip</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="!p-0 overflow-hidden">
+            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="font-bold text-gray-900">Active Shipments</h3>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" leftIcon={<Filter className="w-3 h-3" />}>Filter</Button>
+                <Button variant="ghost" size="sm" leftIcon={<Search className="w-3 h-3" />}>Search</Button>
+              </div>
             </div>
-            <form onSubmit={handleCreate} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Origin</label>
-                  <div className="relative">
-                    <MapPin className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#16A34A]" />
-                    <input required className="w-full pl-10 pr-4 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20" placeholder="Starting location" value={form.origin} onChange={e => setForm({ ...form, origin: e.target.value })} />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Destination</label>
-                  <div className="relative">
-                    <MapPin className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#DC2626]" />
-                    <input required className="w-full pl-10 pr-4 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20" placeholder="Drop-off location" value={form.destination} onChange={e => setForm({ ...form, destination: e.target.value })} />
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Vehicle</label>
-                  <select required className="w-full px-3 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20" value={form.vehicle_id} onChange={e => setForm({ ...form, vehicle_id: e.target.value })}>
-                    <option value="">Select...</option>
-                    {vehicles.filter(v => v.status === "available").map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1.5">Driver</label>
-                  <select required className="w-full px-3 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20" value={form.driver_id} onChange={e => setForm({ ...form, driver_id: e.target.value })}>
-                    <option value="">Select...</option>
-                    {drivers.filter(d => d.status === "active").map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Cargo Weight (T)</label>
-                <input type="number" step="0.1" className="w-full px-4 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20" placeholder="0" value={form.cargo_weight} onChange={e => setForm({ ...form, cargo_weight: e.target.value })} />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1.5">Notes</label>
-                <textarea className="w-full px-4 py-2.5 bg-[#F9FAFB] border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 resize-none" rows={2} placeholder="Optional notes..." value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} />
-              </div>
-              <button className="w-full bg-[#2563EB] text-white font-semibold py-3 rounded-xl hover:bg-[#1D4ED8] shadow-sm flex items-center justify-center gap-2">
-                <Send className="w-4 h-4" /> Create & Dispatch
-              </button>
-            </form>
-          </div>
+            <Table headers={["ID", "Route", "Vehicle/Driver", "Status", "Actions"]}>
+              {trips.map((trip) => (
+                <TableRow key={trip.id}>
+                  <TableCell className="font-bold">#{trip.name.split('/').pop()}</TableCell>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-gray-900">{trip.origin}</span>
+                      <span className="text-xs text-gray-400">to {trip.destination}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-gray-600">{trip.vehicle_id?.[1] || "No Vehicle"}</span>
+                      <span className="text-[10px] text-gray-400">{trip.driver_id?.[1] || "No Driver"}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={trip.state === 'dispatched' ? 'info' : trip.state === 'completed' ? 'success' : 'neutral'}>
+                      {trip.state}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="outline" size="sm" className="text-[10px] h-7">Dispatch</Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </Card>
         </div>
 
-        {/* Right - Trip List */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input type="text" placeholder="Search trips..." value={search} onChange={e => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB]/40" />
-            </div>
-          </div>
-
-          {loading ? (
-            <div className="flex items-center justify-center p-16"><Loader2 className="w-7 h-7 text-[#2563EB] animate-spin" /></div>
-          ) : (
-            <div className="space-y-3">
-              {filtered.length === 0 && <p className="text-center text-sm text-gray-400 py-12">No trips yet</p>}
-              {filtered.map(t => (
-                <div key={t.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-bold text-gray-400">{t.name}</span>
-                        <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${TRIP_BADGE[t.status] || "bg-gray-100 text-gray-500"}`}>{(t.status || "").replace(/_/g, " ")}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <span className="font-medium truncate">{t.origin}</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
-                        <span className="font-medium truncate">{t.destination}</span>
-                      </div>
-                      <div className="flex flex-wrap gap-x-5 gap-y-1 mt-2 text-xs text-gray-400">
-                        {t.vehicle_name && <span>Vehicle: <span className="text-gray-600">{t.vehicle_name}</span></span>}
-                        {t.driver_name && <span>Driver: <span className="text-gray-600">{t.driver_name}</span></span>}
-                        {t.cargo_weight > 0 && <span>Cargo: <span className="text-gray-600">{t.cargo_weight}T</span></span>}
-                      </div>
-                    </div>
-                    <div className="flex gap-2 flex-shrink-0">
-                      {t.status === "draft" && (
-                        <button onClick={() => { dispatchTrip(t.id).then(fetchAll); }} className="px-3 py-1.5 text-xs font-medium bg-[#2563EB]/10 text-[#2563EB] rounded-lg hover:bg-[#2563EB]/20 flex items-center gap-1">
-                          <Send className="w-3 h-3" /> Dispatch
-                        </button>
-                      )}
-                      {(t.status === "dispatched" || t.status === "in_progress") && (
-                        <button onClick={() => { completeTrip(t.id).then(fetchAll); }} className="px-3 py-1.5 text-xs font-medium bg-[#16A34A]/10 text-[#16A34A] rounded-lg hover:bg-[#16A34A]/20 flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Complete
-                        </button>
-                      )}
-                      {t.status !== "completed" && t.status !== "cancelled" && (
-                        <button onClick={() => { cancelTrip(t.id).then(fetchAll); }} className="px-3 py-1.5 text-xs font-medium bg-[#DC2626]/10 text-[#DC2626] rounded-lg hover:bg-[#DC2626]/20 flex items-center gap-1">
-                          <XCircle className="w-3 h-3" /> Cancel
-                        </button>
-                      )}
-                    </div>
+        <div className="space-y-6">
+          <Card title="Quick Trip Creation" className="bg-blue-600 text-white">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-blue-100 uppercase tracking-wider">Route Details</label>
+                <div className="flex gap-2">
+                  <div className="bg-white/10 rounded-xl p-3 flex-1">
+                    <MapPin className="w-4 h-4 text-blue-200 mb-1" />
+                    <p className="text-xs font-medium text-white/60">Origin</p>
+                    <p className="text-sm font-bold">Mumbai MH</p>
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 flex-1 text-right">
+                    <MapPin className="w-4 h-4 text-blue-200 mb-1 ml-auto" />
+                    <p className="text-xs font-medium text-white/60">Destination</p>
+                    <p className="text-sm font-bold">Pune MH</p>
                   </div>
                 </div>
-              ))}
+              </div>
+              <div className="bg-white/10 rounded-2xl p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Cargo Weight</span>
+                  <span className="font-bold text-lg">14.5 T</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm">Distance</span>
+                  <span className="font-bold text-lg">150 km</span>
+                </div>
+              </div>
+              <Button variant="secondary" className="w-full h-12 text-blue-600 font-bold text-lg">
+                Dispatch Now
+              </Button>
             </div>
-          )}
+          </Card>
+
+          <Card title="Trip Lifecycle">
+            <div className="relative pl-6 space-y-6 before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
+              <div className="relative">
+                <div className="absolute -left-[23px] top-1 w-[12px] h-[12px] rounded-full bg-blue-600 border-2 border-white" />
+                <p className="text-sm font-bold text-gray-900">Draft Created</p>
+                <p className="text-xs text-gray-400">System generated via CRM</p>
+              </div>
+              <div className="relative">
+                <div className="absolute -left-[23px] top-1 w-[12px] h-[12px] rounded-full bg-blue-400 border-2 border-white" />
+                <p className="text-sm font-bold text-gray-900">Vehicle Assigned</p>
+                <p className="text-xs text-gray-400">TS12-AB-5678 assigned</p>
+              </div>
+              <div className="relative">
+                <div className="absolute -left-[23px] top-1 w-[12px] h-[12px] rounded-full bg-gray-200 border-2 border-white" />
+                <p className="text-sm font-bold text-gray-400">Departure</p>
+                <p className="text-xs text-gray-400">Awaiting dispatch button</p>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
