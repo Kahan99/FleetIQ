@@ -5,11 +5,11 @@ class FleetCommandCenter(models.Model):
     """
     Command Center helper — thin model-level service that exposes
     real-time KPI computation with optional filter support.
-    Attached to the existing FleetIQ.vehicle model via _inherit
+    Attached to the existing fleetflow.vehicle model via _inherit
     so we can call it from a controller without modifying dashboard.py.
     We use a separate class extending transient so no DB table is created.
     """
-    _inherit = 'FleetIQ.vehicle'
+    _inherit = 'fleetflow.vehicle'
 
     @api.model
     def get_command_center_data(self, vehicle_type=None, vehicle_status=None):
@@ -21,8 +21,8 @@ class FleetCommandCenter(models.Model):
         :param vehicle_status: str|None – one of the status selection values
         :return: dict with KPI values and breakdown lists
         """
-        Vehicle = self.env['FleetIQ.vehicle']
-        Trip    = self.env['FleetIQ.trip']
+        Vehicle = self.env['fleetflow.vehicle']
+        Trip    = self.env['fleetflow.trip']
         company_id = self.env.company.id
 
         # ── Base domain (always scoped to current company) ────────────

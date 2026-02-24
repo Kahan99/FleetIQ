@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="action_FleetIQ_trip_export_csv" model="ir.actions.server">
+        <record id="action_fleetflow_trip_export_csv" model="ir.actions.server">
             <field name="name">Export Trips CSV</field>
-            <field name="model_id" ref="model_FleetIQ_trip"/>
-            <field name="binding_model_id" ref="model_FleetIQ_trip"/>
+            <field name="model_id" ref="model_fleetflow_trip"/>
+            <field name="binding_model_id" ref="model_fleetflow_trip"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">action = records.action_export_csv()</field>

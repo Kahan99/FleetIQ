@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_fleetflow_root" name="FleetIQ" sequence="10" groups="fleetflow.group_fleetflow_user"/>
+
+    <menuitem id="menu_fleetflow_operations" name="Operations" parent="menu_fleetflow_root" sequence="10"/>
+    <menuitem id="menu_fleetflow_configuration" name="Configuration" parent="menu_fleetflow_root" sequence="20" groups="fleetflow.group_fleetflow_manager"/>
+
+    <!-- Command Center — Manager + Dispatcher only, top of Operations -->
+    <menuitem id="menu_fleetflow_command_center"
+              name="Command Center"
+              parent="menu_fleetflow_operations"
+              action="action_fleetflow_command_center"
+              sequence="1"
+              groups="fleetflow.group_fleetflow_manager,fleetflow.group_fleetflow_dispatcher"/>
+
+    <menuitem id="menu_fleetflow_dashboard" name="Dashboard" parent="menu_fleetflow_operations" action="action_fleetflow_dashboard" sequence="5"/>
+    <menuitem id="menu_fleetflow_trips" name="Trips" parent="menu_fleetflow_operations" action="action_fleetflow_trip" sequence="10"/>
+    <menuitem id="menu_fleetflow_maintenance" name="Maintenance" parent="menu_fleetflow_operations" action="action_fleetflow_maintenance" sequence="20"/>
+    <menuitem id="menu_fleetflow_expenses" name="Expenses" parent="menu_fleetflow_operations" action="action_fleetflow_expense" sequence="30"/>
+
+    <menuitem id="menu_fleetflow_vehicles" name="Vehicles" parent="menu_fleetflow_configuration" action="action_fleetflow_vehicle" sequence="10"/>
+    <menuitem id="menu_fleetflow_drivers" name="Drivers" parent="menu_fleetflow_configuration" action="action_fleetflow_driver" sequence="20"/>
+</odoo>

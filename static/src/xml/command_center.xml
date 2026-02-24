@@ -7,7 +7,7 @@
     Registered as: FleetIQ.CommandCenter
 -->
 
-<t t-name="FleetIQ.CommandCenter" owl="1">
+<t t-name="fleetflow.CommandCenter" owl="1">
   <div class="ff-cc-root">
 
     <!-- ── Header ──────────────────────────────────────────── -->

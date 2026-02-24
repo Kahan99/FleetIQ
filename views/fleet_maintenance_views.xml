@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_FleetIQ_maintenance_tree" model="ir.ui.view">
-        <field name="name">FleetIQ.maintenance.tree</field>
-        <field name="model">FleetIQ.maintenance</field>
+    <record id="view_fleetflow_maintenance_tree" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.tree</field>
+        <field name="model">fleetflow.maintenance</field>
         <field name="arch" type="xml">
             <tree decoration-danger="vehicle_status in ('in_shop', 'maintenance')" decoration-muted="vehicle_status in ('inactive', 'retired')">
                 <field name="vehicle_id"/>
@@ -15,14 +15,14 @@
         </field>
     </record>
 
-    <record id="view_FleetIQ_maintenance_form" model="ir.ui.view">
-        <field name="name">FleetIQ.maintenance.form</field>
-        <field name="model">FleetIQ.maintenance</field>
+    <record id="view_fleetflow_maintenance_form" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.form</field>
+        <field name="model">fleetflow.maintenance</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_FleetIQ_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_id': vehicle_id}">
+                        <button name="%(action_fleetflow_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_id': vehicle_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Vehicle</span></div>
                         </button>
                     </div>
@@ -42,9 +42,9 @@
         </field>
     </record>
 
-    <record id="view_FleetIQ_maintenance_search" model="ir.ui.view">
-        <field name="name">FleetIQ.maintenance.search</field>
-        <field name="model">FleetIQ.maintenance</field>
+    <record id="view_fleetflow_maintenance_search" model="ir.ui.view">
+        <field name="name">fleetflow.maintenance.search</field>
+        <field name="model">fleetflow.maintenance</field>
         <field name="arch" type="xml">
             <search>
                 <field name="vehicle_id"/>
