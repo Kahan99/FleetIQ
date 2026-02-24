@@ -4,19 +4,19 @@ import { TrendingUp, Download } from "lucide-react";
 
 export default function AnalyticsPage() {
   const financialData = [
-  { month: "Jan", revenue: "Rs. 17L", fuel: "Rs. 6L", maintenance: "Rs. 2L", profit: "Rs. 9L" },
-  { month: "Feb", revenue: "Rs. 18L", fuel: "Rs. 6.5L", maintenance: "Rs. 1.5L", profit: "Rs. 10L" },
-  { month: "Mar", revenue: "Rs. 16L", fuel: "Rs. 5.8L", maintenance: "Rs. 3L", profit: "Rs. 7.2L" },
-  { month: "Apr", revenue: "Rs. 19L", fuel: "Rs. 7L", maintenance: "Rs. 2L", profit: "Rs. 10L" },
-  { month: "May", revenue: "Rs. 21L", fuel: "Rs. 7.5L", maintenance: "Rs. 2.5L", profit: "Rs. 11L" }];
+    { month: "Jan", revenue: "Rs. 17L", fuel: "Rs. 6L", maintenance: "Rs. 2L", profit: "Rs. 9L" },
+    { month: "Feb", revenue: "Rs. 18L", fuel: "Rs. 6.5L", maintenance: "Rs. 1.5L", profit: "Rs. 10L" },
+    { month: "Mar", revenue: "Rs. 16L", fuel: "Rs. 5.8L", maintenance: "Rs. 3L", profit: "Rs. 7.2L" },
+    { month: "Apr", revenue: "Rs. 19L", fuel: "Rs. 7L", maintenance: "Rs. 2L", profit: "Rs. 10L" },
+    { month: "May", revenue: "Rs. 21L", fuel: "Rs. 7.5L", maintenance: "Rs. 2.5L", profit: "Rs. 11L" }];
 
 
   const vehicles = [
-  { id: "TRK-01", cost: 100 },
-  { id: "TRK-02", cost: 85 },
-  { id: "VAN-03", cost: 60 },
-  { id: "TRK-05", cost: 45 },
-  { id: "VAN-01", cost: 30 }];
+    { id: "TRK-01", cost: 100 },
+    { id: "TRK-02", cost: 85 },
+    { id: "VAN-03", cost: 60 },
+    { id: "TRK-05", cost: 45 },
+    { id: "VAN-01", cost: 30 }];
 
 
   return (
@@ -28,9 +28,6 @@ export default function AnalyticsPage() {
           </h1>
           <p className="text-gray-500 mt-1">Data-driven decision making and fleet performance tracking.</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-sm font-semibold transition-colors shadow-sm text-gray-700">
-          <Download className="w-4 h-4" /> Export CSV/PDF
-        </button>
       </div>
 
       {/* Top Cards Row */}
@@ -81,7 +78,7 @@ export default function AnalyticsPage() {
                 stroke="#2563eb"
                 strokeWidth="2"
                 points="0,80 20,40 40,70 60,30 80,60 100,10" />
-              
+
 
               {/* Dots */}
               <circle cx="0" cy="80" r="2" fill="#2563eb" className="cursor-pointer hover:r-3 transition-all" />
@@ -122,11 +119,11 @@ export default function AnalyticsPage() {
               <span>0</span>
             </div>
             {vehicles.map((v, i) =>
-            <div key={v.id} className="flex flex-col items-center gap-2 group w-full">
+              <div key={v.id} className="flex flex-col items-center gap-2 group w-full">
                 <div
-                className="w-full max-w-[48px] bg-rose-500/80 rounded-t-sm group-hover:bg-rose-600 transition-colors relative"
-                style={{ height: `${v.cost}%` }}>
-                
+                  className="w-full max-w-[48px] bg-rose-500/80 rounded-t-sm group-hover:bg-rose-600 transition-colors relative"
+                  style={{ height: `${v.cost}%` }}>
+
                   <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity">
                     Rs.{v.cost}k
                   </span>
@@ -158,7 +155,7 @@ export default function AnalyticsPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {financialData.map((row, idx) =>
-              <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
                   <td className="py-4 px-6 text-sm font-semibold text-gray-900 flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-500" />
                     {row.month}

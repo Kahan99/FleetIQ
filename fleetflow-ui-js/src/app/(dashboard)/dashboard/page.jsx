@@ -83,9 +83,6 @@ export default function DashboardPage() {
           <p className="text-gray-500 mt-1">Manage and monitor your fleet operations in real-time.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" leftIcon={<Filter className="w-4 h-4" />}>
-            Filters
-          </Button>
           <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => setShowNewTripModal(true)}>
             New Trip
           </Button>
@@ -102,7 +99,7 @@ export default function DashboardPage() {
 
       {/* Recent Trips Table */}
       <Card title="Recent Fleet Activity" subtitle="Real-time status of your latest trips and deliveries.">
-        <Table headers={["Trip ID", "Vehicle", "Route", "Schedule", "Status", "Action"]}>
+        <Table headers={["Trip ID", "Vehicle", "Route", "Schedule", "Status"]}>
           {data.trips.slice(0, 6).map((trip) =>
             <TableRow key={trip.id}>
               <TableCell className="font-semibold text-gray-900">#{trip.name.split('/').pop()}</TableCell>
@@ -127,9 +124,6 @@ export default function DashboardPage() {
                 }>
                   {trip.state.charAt(0) + trip.state.slice(1)}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <button className="text-blue-600 font-semibold hover:underline text-xs">View Details</button>
               </TableCell>
             </TableRow>
           )}

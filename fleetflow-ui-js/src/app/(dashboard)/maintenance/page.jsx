@@ -27,9 +27,6 @@ export default function MaintenancePage() {
           </h1>
           <p className="text-gray-500 mt-1">Monitor fleet health and recurring service schedules.</p>
         </div>
-        <Button variant="danger" leftIcon={<Wrench className="w-4 h-4" />}>
-          Log Maintenance
-        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -74,12 +71,9 @@ export default function MaintenancePage() {
               className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all outline-none" />
 
           </div>
-          <Button variant="outline" leftIcon={<Filter className="w-4 h-4" />}>
-            Fitlers
-          </Button>
         </div>
 
-        <Table headers={["Vehicle", "Service Details", "Schedule Date", "Est. Cost", "Status", ""]}>
+        <Table headers={["Vehicle", "Service Details", "Schedule Date", "Est. Cost", "Status"]}>
           {MAINTENANCE_LOGS.map((log) =>
             <TableRow key={log.id}>
               <TableCell>
@@ -104,11 +98,6 @@ export default function MaintenancePage() {
                 }>
                   {log.status.replace('_', ' ')}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <MoreHorizontal className="w-4 h-4 text-gray-400" />
-                </button>
               </TableCell>
             </TableRow>
           )}

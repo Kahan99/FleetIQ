@@ -59,12 +59,8 @@ export default function TripsPage() {
           <Card className="!p-0 overflow-hidden">
             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
               <h3 className="font-bold text-gray-900">Active Shipments</h3>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" leftIcon={<Filter className="w-3 h-3" />}>Filter</Button>
-                <Button variant="ghost" size="sm" leftIcon={<Search className="w-3 h-3" />}>Search</Button>
-              </div>
             </div>
-            <Table headers={["ID", "Route", "Vehicle/Driver", "Status", "Actions"]}>
+            <Table headers={["ID", "Route", "Vehicle/Driver", "Status"]}>
               {trips.map((trip) =>
                 <TableRow key={trip.id}>
                   <TableCell className="font-bold">#{trip.name.split('/').pop()}</TableCell>
@@ -84,11 +80,6 @@ export default function TripsPage() {
                     <Badge variant={trip.state === 'dispatched' ? 'info' : trip.state === 'completed' ? 'success' : 'neutral'}>
                       {trip.state}
                     </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" className="text-[10px] h-7">Dispatch</Button>
-                    </div>
                   </TableCell>
                 </TableRow>
               )}

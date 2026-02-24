@@ -76,13 +76,10 @@ export default function VehiclesPage() {
             className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/20 transition-all outline-none" />
 
         </div>
-        <Button variant="outline" leftIcon={<Filter className="w-4 h-4" />}>
-          More Filters
-        </Button>
       </div>
 
       <Card>
-        <Table headers={["Vehicle", "Type", "License Plate", "Region", "Status", ""]}>
+        <Table headers={["Vehicle", "Type", "License Plate", "Region", "Status"]}>
           {filteredVehicles.map((vehicle) =>
             <TableRow key={vehicle.id}>
               <TableCell>
@@ -100,11 +97,6 @@ export default function VehiclesPage() {
                 <Badge variant={getStatusVariant(vehicle.status)}>
                   {vehicle.status.replace('_', ' ')}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <MoreVertical className="w-4 h-4 text-gray-400" />
-                </button>
               </TableCell>
             </TableRow>
           )}

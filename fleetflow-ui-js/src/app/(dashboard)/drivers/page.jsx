@@ -30,9 +30,6 @@ function DriverCard({ driver }) {
             </div>
           </div>
         </div>
-        <button className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
-          <ExternalLink className="w-4 h-4 text-gray-400" />
-        </button>
       </div>
 
       <div className="space-y-4">
@@ -63,16 +60,7 @@ function DriverCard({ driver }) {
           </div>
         </div>
       </div>
-
-      <div className="mt-6 flex items-center gap-2 pt-4 border-t border-gray-50">
-        <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors text-xs font-bold">
-          <Phone className="w-3.5 h-3.5" /> Call
-        </button>
-        <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-gray-50 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors text-xs font-bold">
-          <Mail className="w-3.5 h-3.5" /> Message
-        </button>
-      </div>
-    </Card>);
+    </Card >);
 
 }
 
@@ -117,7 +105,6 @@ export default function DriversPage() {
           <p className="text-gray-500 mt-1">Track safety scores, ratings and trip completions.</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" leftIcon={<AlertCircle className="w-4 h-4" />}>Expiry Alerts</Button>
           <Button leftIcon={<Users className="w-4 h-4" />} onClick={() => setShowAddModal(true)}>Add Driver</Button>
         </div>
       </div>
@@ -133,7 +120,6 @@ export default function DriversPage() {
             className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:bg-white focus:ring-4 focus:ring-blue-500/5 transition-all outline-none" />
 
         </div>
-        <Button variant="outline" leftIcon={<Filter className="w-4 h-4" />}>Filters</Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
