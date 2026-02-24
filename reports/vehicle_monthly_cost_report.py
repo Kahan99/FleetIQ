@@ -3,12 +3,12 @@ from datetime import date
 from odoo import fields, models
 
 
-class ReportFleetIQVehicleMonthlyCost(models.AbstractModel):
-    _name = 'report.FleetIQ.report_vehicle_monthly_cost_template'
-    _description = 'FleetIQ Monthly Vehicle Cost Report'
+class ReportFleetflowVehicleMonthlyCost(models.AbstractModel):
+    _name = 'report.fleetflow.report_vehicle_monthly_cost_template'
+    _description = 'fleetflow Monthly Vehicle Cost Report'
 
     def _get_report_values(self, docids, data=None):
-        vehicles = self.env['FleetIQ.vehicle'].browse(docids)
+        vehicles = self.env['fleetflow.vehicle'].browse(docids)
         today = fields.Date.today() or date.today()
         month_start = today.replace(day=1)
 
@@ -34,7 +34,7 @@ class ReportFleetIQVehicleMonthlyCost(models.AbstractModel):
 
         return {
             'doc_ids': docids,
-            'doc_model': 'FleetIQ.vehicle',
+            'doc_model': 'fleetflow.vehicle',
             'docs': docs,
             'month_start': month_start,
             'today': today,

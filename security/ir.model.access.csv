@@ -1,17 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_FleetIQ_vehicle_user,FleetIQ.vehicle user,model_FleetIQ_vehicle,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_driver_user,FleetIQ.driver user,model_FleetIQ_driver,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_trip_user,FleetIQ.trip user,model_FleetIQ_trip,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_maintenance_user,FleetIQ.maintenance user,model_FleetIQ_maintenance,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_expense_user,FleetIQ.expense user,model_FleetIQ_expense,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_dashboard_user,FleetIQ.dashboard user,model_FleetIQ_dashboard,FleetIQ.group_FleetIQ_user,1,0,0,0
-access_FleetIQ_vehicle_manager,FleetIQ.vehicle manager,model_FleetIQ_vehicle,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_driver_manager,FleetIQ.driver manager,model_FleetIQ_driver,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_trip_manager,FleetIQ.trip manager,model_FleetIQ_trip,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_maintenance_manager,FleetIQ.maintenance manager,model_FleetIQ_maintenance,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_expense_manager,FleetIQ.expense manager,model_FleetIQ_expense,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_dashboard_manager,FleetIQ.dashboard manager,model_FleetIQ_dashboard,FleetIQ.group_FleetIQ_manager,1,1,1,1
-access_FleetIQ_trip_dispatcher,FleetIQ.trip dispatcher,model_FleetIQ_trip,FleetIQ.group_FleetIQ_dispatcher,1,1,1,1
-access_FleetIQ_driver_safety_officer,FleetIQ.driver safety officer,model_FleetIQ_driver,FleetIQ.group_FleetIQ_safety_officer,1,1,1,1
-access_FleetIQ_dashboard_financial_analyst,FleetIQ.dashboard financial analyst,model_FleetIQ_dashboard,FleetIQ.group_FleetIQ_financial_analyst,1,0,0,0
-access_FleetIQ_vehicle_dispatcher,FleetIQ.vehicle dispatcher,model_FleetIQ_vehicle,FleetIQ.group_FleetIQ_dispatcher,1,0,0,0
+access_fleetflow_vehicle_user,fleetflow.vehicle user,model_fleetflow_vehicle,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_driver_user,fleetflow.driver user,model_fleetflow_driver,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_trip_user,fleetflow.trip user,model_fleetflow_trip,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_maintenance_user,fleetflow.maintenance user,model_fleetflow_maintenance,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_expense_user,fleetflow.expense user,model_fleetflow_expense,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_dashboard_user,fleetflow.dashboard user,model_fleetflow_dashboard,fleetflow.group_fleetflow_user,1,0,0,0
+access_fleetflow_vehicle_manager,fleetflow.vehicle manager,model_fleetflow_vehicle,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_driver_manager,fleetflow.driver manager,model_fleetflow_driver,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_trip_manager,fleetflow.trip manager,model_fleetflow_trip,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_maintenance_manager,fleetflow.maintenance manager,model_fleetflow_maintenance,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_expense_manager,fleetflow.expense manager,model_fleetflow_expense,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_dashboard_manager,fleetflow.dashboard manager,model_fleetflow_dashboard,fleetflow.group_fleetflow_manager,1,1,1,1
+access_fleetflow_trip_dispatcher,fleetflow.trip dispatcher,model_fleetflow_trip,fleetflow.group_fleetflow_dispatcher,1,1,1,1
+access_fleetflow_driver_safety_officer,fleetflow.driver safety officer,model_fleetflow_driver,fleetflow.group_fleetflow_safety_officer,1,1,1,1
+access_fleetflow_dashboard_financial_analyst,fleetflow.dashboard financial analyst,model_fleetflow_dashboard,fleetflow.group_fleetflow_financial_analyst,1,0,0,0
+access_fleetflow_vehicle_dispatcher,fleetflow.vehicle dispatcher,model_fleetflow_vehicle,fleetflow.group_fleetflow_dispatcher,1,0,0,0

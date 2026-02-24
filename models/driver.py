@@ -3,33 +3,57 @@ from odoo.exceptions import ValidationError
 from datetime import date
 
 
-class FleetIQDriver(models.Model):
-    _name = 'FleetIQ.driver'
-    _description = 'FleetIQ Driver'
+class FleetflowDriver(models.Model):
+    _name = 'fleetflow.driver'
+    _description = 'Fleet Driver'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'name'
 
-    name = fields.Char(required=True)
-    license_number = fields.Char()
-    license_expiry = fields.Date()
-    license_category = fields.Selection([
-        ('car', 'Car'),
-        ('truck', 'Truck'),
-        ('van', 'Van'),
-        ('bus', 'Bus'),
-        ('other', 'Other'),
-    ], string='License Category', default='car', required=True)
-    phone = fields.Char()
-    status = fields.Selection([
-        ('on_duty', 'On Duty'),
-        ('off_duty', 'Off Duty'),
-        ('suspended', 'Suspended')
-    ], default='off_duty', required=True)
-    safety_score = fields.Float(compute='_compute_safety_score', store=True)
+    name = fields.Char(required=True, tracking=True)
+    license_number = fields.Char(required=True, copy=False, index=True, tracking=True)
+    license_expiry = fields.Date(tracking=True)
+    license_category = fields.Selection(
+        [
+            ('car', 'Car'),
+            ('truck', 'Truck'),
+            ('van', 'Van'),
+            ('bus', 'Bus'),
+            ('other', 'Other'),
+        ],
+        required=True,
+        default='car',
+        tracking=True,
+    )
+    phone = fields.Char(tracking=True)
+    email = fields.Char(tracking=True)
+    status = fields.Selection(
+        [
+            ('available', 'Available'),
+            ('on_duty', 'On Duty'),
+            ('off_duty', 'Off Duty'),
+            ('on_leave', 'On Leave'),
+            ('suspended', 'Suspended'),
+        ],
+        default='available',
+        required=True,
+        tracking=True,
+    )
+    safety_score = fields.Float(compute='_compute_safety_score', store=True, tracking=True)
     completion_rate = fields.Float(compute='_compute_completion_rate', store=True)
     is_license_expired = fields.Boolean(compute='_compute_is_license_expired')
-    trip_ids = fields.One2many('FleetIQ.trip', 'driver_id', string='Trips')
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    active = fields.Boolean(default=True)
 
-    @api.depends('trip_ids.state', 'license_expiry')
+    company_id = fields.Many2one(
+        'res.company',
+        required=True,
+        default=lambda self: self.env.company,
+        index=True,
+    )
+
+    vehicle_ids = fields.One2many('fleetflow.vehicle', 'driver_id', string='Vehicles')
+    trip_ids = fields.One2many('fleetflow.trip', 'driver_id', string='Trips')
+
+    @api.depends('trip_ids.state')
     def _compute_completion_rate(self):
         for record in self:
             total = len(record.trip_ids)

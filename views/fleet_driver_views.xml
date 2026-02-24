@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_FleetIQ_driver_tree" model="ir.ui.view">
-        <field name="name">FleetIQ.driver.tree</field>
-        <field name="model">FleetIQ.driver</field>
+    <record id="view_fleetflow_driver_tree" model="ir.ui.view">
+        <field name="name">fleetflow.driver.tree</field>
+        <field name="model">fleetflow.driver</field>
         <field name="arch" type="xml">
             <tree decoration-success="status == 'on_duty'" decoration-info="status == 'off_duty'" decoration-danger="status == 'suspended'">
                 <field name="name"/>
@@ -18,9 +18,9 @@
         </field>
     </record>
 
-    <record id="view_FleetIQ_driver_form" model="ir.ui.view">
-        <field name="name">FleetIQ.driver.form</field>
-        <field name="model">FleetIQ.driver</field>
+    <record id="view_fleetflow_driver_form" model="ir.ui.view">
+        <field name="name">fleetflow.driver.form</field>
+        <field name="model">fleetflow.driver</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -28,10 +28,10 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(action_FleetIQ_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_driver_id': active_id, 'default_driver_id': active_id}">
+                        <button name="%(action_fleetflow_trip)d" type="action" class="oe_stat_button" icon="fa-road" context="{'search_default_driver_id': active_id, 'default_driver_id': active_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Trips</span></div>
                         </button>
-                        <button name="%(action_FleetIQ_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_driver_id': active_id, 'default_driver_id': active_id}">
+                        <button name="%(action_fleetflow_vehicle)d" type="action" class="oe_stat_button" icon="fa-truck" context="{'search_default_driver_id': active_id, 'default_driver_id': active_id}">
                             <div class="o_stat_info"><span class="o_stat_text">Vehicles</span></div>
                         </button>
                     </div>
@@ -73,9 +73,9 @@
         </field>
     </record>
 
-    <record id="view_FleetIQ_driver_search" model="ir.ui.view">
-        <field name="name">FleetIQ.driver.search</field>
-        <field name="model">FleetIQ.driver</field>
+    <record id="view_fleetflow_driver_search" model="ir.ui.view">
+        <field name="name">fleetflow.driver.search</field>
+        <field name="model">fleetflow.driver</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>

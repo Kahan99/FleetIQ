@@ -2,8 +2,8 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class FleetIQVehicle(models.Model):
-    _name = 'FleetIQ.vehicle'
+class FleetflowVehicle(models.Model):
+    _name = 'fleetflow.vehicle'
     _description = 'Fleet Vehicle'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'name'
@@ -62,10 +62,10 @@ class FleetIQVehicle(models.Model):
     )
     currency_id = fields.Many2one(related='company_id.currency_id', store=True, readonly=True)
 
-    driver_id = fields.Many2one('FleetIQ.driver', tracking=True)
-    trip_ids = fields.One2many('FleetIQ.trip', 'vehicle_id', string='Trips')
-    maintenance_ids = fields.One2many('FleetIQ.maintenance', 'vehicle_id', string='Maintenance')
-    expense_ids = fields.One2many('FleetIQ.expense', 'vehicle_id', string='Expenses')
+    driver_id = fields.Many2one('fleetflow.driver', tracking=True)
+    trip_ids = fields.One2many('fleetflow.trip', 'vehicle_id', string='Trips')
+    maintenance_ids = fields.One2many('fleetflow.maintenance', 'vehicle_id', string='Maintenance')
+    expense_ids = fields.One2many('fleetflow.expense', 'vehicle_id', string='Expenses')
 
     trip_count = fields.Integer(compute='_compute_trip_count', store=True)
     maintenance_cost_total = fields.Monetary(compute='_compute_maintenance_cost_total', store=True)

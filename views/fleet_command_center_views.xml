@@ -9,29 +9,29 @@
     -->
 
     <!-- ── Client Action ──────────────────────────────────────── -->
-    <record id="action_FleetIQ_command_center" model="ir.actions.client">
+    <record id="action_fleetflow_command_center" model="ir.actions.client">
         <field name="name">Command Center</field>
-        <field name="tag">FleetIQ_command_center</field>
+        <field name="tag">fleetflow_command_center</field>
         <field name="target">current</field>
     </record>
 
     <!-- ── Static Assets (JS component + QWeb XML template + CSS) ── -->
-    <record id="FleetIQ_command_center_assets" model="ir.asset">
-        <field name="name">FleetIQ Command Center JS</field>
+    <record id="fleetflow_command_center_assets" model="ir.asset">
+        <field name="name">fleetflow Command Center JS</field>
         <field name="bundle">web.assets_backend</field>
-        <field name="path">FleetIQ/static/src/js/command_center.js</field>
+        <field name="path">fleetflow/static/src/js/command_center.js</field>
     </record>
 
-    <record id="FleetIQ_command_center_xml" model="ir.asset">
-        <field name="name">FleetIQ Command Center XML Template</field>
+    <record id="fleetflow_command_center_xml" model="ir.asset">
+        <field name="name">fleetflow Command Center XML Template</field>
         <field name="bundle">web.assets_backend</field>
-        <field name="path">FleetIQ/static/src/xml/command_center.xml</field>
+        <field name="path">fleetflow/static/src/xml/command_center.xml</field>
     </record>
 
-    <record id="FleetIQ_command_center_css" model="ir.asset">
-        <field name="name">FleetIQ Command Center CSS</field>
+    <record id="fleetflow_command_center_css" model="ir.asset">
+        <field name="name">fleetflow Command Center CSS</field>
         <field name="bundle">web.assets_backend</field>
-        <field name="path">FleetIQ/static/src/css/command_center.css</field>
+        <field name="path">fleetflow/static/src/css/command_center.css</field>
     </record>
 
 </odoo>

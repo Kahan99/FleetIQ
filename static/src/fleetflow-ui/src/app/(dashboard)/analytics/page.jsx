@@ -8,7 +8,42 @@ export default function AnalyticsPage() {
     { month: "Feb", revenue: "Rs. 18L", fuel: "Rs. 6.5L", maintenance: "Rs. 1.5L", profit: "Rs. 10L" },
     { month: "Mar", revenue: "Rs. 16L", fuel: "Rs. 5.8L", maintenance: "Rs. 3L", profit: "Rs. 7.2L" },
     { month: "Apr", revenue: "Rs. 19L", fuel: "Rs. 7L", maintenance: "Rs. 2L", profit: "Rs. 10L" },
-    { month: "May", revenue: "Rs. 21L", fuel: "Rs. 7.5L", maintenance: "Rs. 2.5L", profit: "Rs. 11L" }];
+    { month: "May", revenue: "Rs. 21L", fuel: "Rs. 7.5L", maintenance: "Rs. 2.5L", profit: "Rs. 11L" }
+  ];
+
+  const handleExportCSV = () => {
+    // Generate CSV header
+    const headers = ["Month", "Revenue", "Fuel Cost", "Maintenance", "Net Profit"];
+    const csvRows = [headers.join(",")];
+
+    // Add rows
+    financialData.forEach(row => {
+      csvRows.push([
+        `"${row.month}"`,
+        `"${row.revenue}"`,
+        `"${row.fuel}"`,
+        `"${row.maintenance}"`,
+        `"${row.profit}"`
+      ].join(","));
+    });
+
+    // Create and trigger download using robust Blob with UTF-8 BOM for Excel/Edge compatibility
+    const csvContent = csvRows.join("\n");
+    // Add BOM prefix \ufeff so Excel and Edge correctly identify it as a valid UTF-8 CSV
+    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "financial_analytics.csv";
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 2-second delay to ensure Edge/Windows finishes the download hook before memory is revoked
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  };
 
 
   const vehicles = [
@@ -26,7 +61,7 @@ export default function AnalyticsPage() {
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Operational Analytics & Financial Reports
           </h1>
-          <Button leftIcon={<Download className="w-4 h-4" />}>
+          <Button leftIcon={<Download className="w-4 h-4" />} onClick={handleExportCSV}>
             Export CSV
           </Button>
         </div>

@@ -2,11 +2,11 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class FleetIQMaintenance(models.Model):
-    _name = 'FleetIQ.maintenance'
+class FleetflowMaintenance(models.Model):
+    _name = 'fleetflow.maintenance'
     _description = 'Fleet Maintenance'
 
-    vehicle_id = fields.Many2one('FleetIQ.vehicle', required=True, ondelete='cascade')
+    vehicle_id = fields.Many2one('fleetflow.vehicle', required=True, ondelete='cascade')
     company_id = fields.Many2one(related='vehicle_id.company_id', store=True, readonly=True)
     vehicle_status = fields.Selection(related='vehicle_id.status', store=True, readonly=True)
     issue = fields.Char(required=True)

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Truck, Search, Plus, Filter, MoreVertical, Loader2 } from "lucide-react";
-import { getVehicles } from "@/lib/api";
+import { getVehicles, createVehicle } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -15,17 +15,18 @@ export default function VehiclesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const fetchVehicles = async () => {
+    try {
+      const data = await getVehicles();
+      setVehicles(data);
+    } catch (error) {
+      console.error("Failed to fetch vehicles:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchVehicles = async () => {
-      try {
-        const data = await getVehicles();
-        setVehicles(data);
-      } catch (error) {
-        console.error("Failed to fetch vehicles:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchVehicles();
   }, []);
 
@@ -110,17 +111,21 @@ export default function VehiclesPage() {
       <AddVehicleModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onSubmit={(vehicleData) => {
-          const newVehicle = {
-            id: Math.random(),
-            name: vehicleData.name,
-            license_plate: vehicleData.license_plate,
-            vehicle_type: vehicleData.vehicle_type,
-            status: 'available',
-            region: 'National'
-          };
-          setVehicles(prev => [newVehicle, ...prev]);
-          alert("Vehicle added successfully!");
+        onSubmit={async (vehicleData) => {
+          try {
+            await createVehicle({
+              name: vehicleData.name,
+              license_plate: vehicleData.license_plate,
+              vehicle_type: vehicleData.vehicle_type,
+              capacity: vehicleData.capacity,
+            });
+            await fetchVehicles();
+            alert("Vehicle added successfully!");
+            setShowAddModal(false);
+          } catch (e) {
+            alert("Failed to add vehicle.");
+            console.error(e);
+          }
         }}
       />
     </div>);

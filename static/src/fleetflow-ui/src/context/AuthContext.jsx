@@ -30,10 +30,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Demo accounts per role
 const DEMO_USERS = [
-{ id: '1', name: 'Admin Manager', email: 'manager@FleetIQ.com', password: 'fleet123', role: 'fleet_manager' },
-{ id: '2', name: 'Alex Dispatcher', email: 'dispatch@FleetIQ.com', password: 'fleet123', role: 'dispatcher' },
-{ id: '3', name: 'Sara Safety', email: 'safety@FleetIQ.com', password: 'fleet123', role: 'safety_officer' },
-{ id: '4', name: 'Finance Analyst', email: 'finance@FleetIQ.com', password: 'fleet123', role: 'financial_analyst' }];
+  { id: '1', name: 'Admin Manager', email: 'manager@fleetflow.com', password: 'fleet123', role: 'fleet_manager' },
+  { id: '2', name: 'Alex Dispatcher', email: 'dispatch@fleetflow.com', password: 'fleet123', role: 'dispatcher' },
+  { id: '3', name: 'Sara Safety', email: 'safety@fleetflow.com', password: 'fleet123', role: 'safety_officer' },
+  { id: '4', name: 'Finance Analyst', email: 'finance@fleetflow.com', password: 'fleet123', role: 'financial_analyst' }];
 
 
 const AuthContext = createContext(undefined);
@@ -45,9 +45,9 @@ export function AuthProvider({ children }) {
   // Rehydrate from localStorage on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('FleetIQ_user');
+      const stored = localStorage.getItem('fleetflow_user');
       if (stored) setUser(JSON.parse(stored));
-    } catch (_) {}
+    } catch (_) { }
     setIsLoading(false);
   }, []);
 
@@ -62,22 +62,22 @@ export function AuthProvider({ children }) {
     let regMatch = null;
     try {
       const reg = JSON.parse(
-        localStorage.getItem('FleetIQ_registered') || '[]'
+        localStorage.getItem('fleetflow_registered') || '[]'
       );
       const m = reg.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
       if (m) {
         const { password: _, ...u } = m;
         regMatch = u;
       }
-    } catch (_) {}
+    } catch (_) { }
 
     const matched = found ?
-    (() => {const { password: _, ...u } = found;return u;})() :
-    regMatch;
+      (() => { const { password: _, ...u } = found; return u; })() :
+      regMatch;
 
     if (matched) {
       setUser(matched);
-      localStorage.setItem('FleetIQ_user', JSON.stringify(matched));
+      localStorage.setItem('fleetflow_user', JSON.stringify(matched));
       return { success: true };
     }
     return { success: false, error: 'Invalid email or password.' };
@@ -88,11 +88,11 @@ export function AuthProvider({ children }) {
 
     // Check duplicate in demo + registered
     const allEmails = [
-    ...DEMO_USERS.map((u) => u.email.toLowerCase()),
-    ...(() => {
-      try {return JSON.parse(localStorage.getItem('FleetIQ_registered') || '[]').map((u) => u.email.toLowerCase());}
-      catch (_) {return [];}
-    })()];
+      ...DEMO_USERS.map((u) => u.email.toLowerCase()),
+      ...(() => {
+        try { return JSON.parse(localStorage.getItem('fleetflow_registered') || '[]').map((u) => u.email.toLowerCase()); }
+        catch (_) { return []; }
+      })()];
 
     if (allEmails.includes(data.email.toLowerCase())) {
       return { success: false, error: 'An account with this email already exists.' };
@@ -106,26 +106,26 @@ export function AuthProvider({ children }) {
       role: data.role
     };
     try {
-      const list = JSON.parse(localStorage.getItem('FleetIQ_registered') || '[]');
+      const list = JSON.parse(localStorage.getItem('fleetflow_registered') || '[]');
       list.push(newUser);
-      localStorage.setItem('FleetIQ_registered', JSON.stringify(list));
-    } catch (_) {}
+      localStorage.setItem('fleetflow_registered', JSON.stringify(list));
+    } catch (_) { }
 
     const { password: _, ...withoutPw } = newUser;
     setUser(withoutPw);
-    localStorage.setItem('FleetIQ_user', JSON.stringify(withoutPw));
+    localStorage.setItem('fleetflow_user', JSON.stringify(withoutPw));
     return { success: true };
   };
 
   const logout = () => {
     setUser(null);
-    try {localStorage.removeItem('FleetIQ_user');} catch (_) {}
+    try { localStorage.removeItem('fleetflow_user'); } catch (_) { }
   };
 
   return (
     <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
-            {children}
-        </AuthContext.Provider>);
+      {children}
+    </AuthContext.Provider>);
 
 }
 

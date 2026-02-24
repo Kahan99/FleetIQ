@@ -2,12 +2,12 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class FleetIQExpense(models.Model):
-    _name = 'FleetIQ.expense'
+class FleetflowExpense(models.Model):
+    _name = 'fleetflow.expense'
     _description = 'Fleet Expense'
 
-    vehicle_id = fields.Many2one('FleetIQ.vehicle', required=True, ondelete='cascade')
-    trip_id = fields.Many2one('FleetIQ.trip', required=False, ondelete='cascade', domain="[('vehicle_id', '=', vehicle_id)]")
+    vehicle_id = fields.Many2one('fleetflow.vehicle', required=True, ondelete='cascade')
+    trip_id = fields.Many2one('fleetflow.trip', required=False, ondelete='cascade', domain="[('vehicle_id', '=', vehicle_id)]")
     company_id = fields.Many2one(related='vehicle_id.company_id', store=True, readonly=True)
     trip_state = fields.Selection(related='trip_id.state', store=True, readonly=True)
     liters = fields.Float(required=True, default=0.0)

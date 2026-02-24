@@ -2,52 +2,52 @@
 <odoo>
     <!-- All window actions centralised to avoid circular XML references -->
 
-    <record id="action_FleetIQ_dashboard" model="ir.actions.act_window">
+    <record id="action_fleetflow_dashboard" model="ir.actions.act_window">
         <field name="name">Dashboard</field>
-        <field name="res_model">FleetIQ.dashboard</field>
+        <field name="res_model">fleetflow.dashboard</field>
         <field name="view_mode">kanban,form</field>
         <field name="context">{'search_default_my_company': 1}</field>
     </record>
 
-    <record id="action_FleetIQ_vehicle" model="ir.actions.act_window">
+    <record id="action_fleetflow_vehicle" model="ir.actions.act_window">
         <field name="name">Vehicles</field>
-        <field name="res_model">FleetIQ.vehicle</field>
+        <field name="res_model">fleetflow.vehicle</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p>Create your first vehicle.</p>
         </field>
     </record>
 
-    <record id="action_FleetIQ_driver" model="ir.actions.act_window">
+    <record id="action_fleetflow_driver" model="ir.actions.act_window">
         <field name="name">Drivers</field>
-        <field name="res_model">FleetIQ.driver</field>
+        <field name="res_model">fleetflow.driver</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>Create your first driver.</p>
         </field>
     </record>
 
-    <record id="action_FleetIQ_trip" model="ir.actions.act_window">
+    <record id="action_fleetflow_trip" model="ir.actions.act_window">
         <field name="name">Trips</field>
-        <field name="res_model">FleetIQ.trip</field>
+        <field name="res_model">fleetflow.trip</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>Create your first trip.</p>
         </field>
     </record>
 
-    <record id="action_FleetIQ_maintenance" model="ir.actions.act_window">
+    <record id="action_fleetflow_maintenance" model="ir.actions.act_window">
         <field name="name">Maintenance</field>
-        <field name="res_model">FleetIQ.maintenance</field>
+        <field name="res_model">fleetflow.maintenance</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p>Create your first maintenance request.</p>
         </field>
     </record>
 
-    <record id="action_FleetIQ_expense" model="ir.actions.act_window">
+    <record id="action_fleetflow_expense" model="ir.actions.act_window">
         <field name="name">Expenses</field>
-        <field name="res_model">FleetIQ.expense</field>
+        <field name="res_model">fleetflow.expense</field>
         <field name="view_mode">tree,form</field>
     </record>
 </odoo>
