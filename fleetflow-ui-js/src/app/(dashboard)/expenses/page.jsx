@@ -1,0 +1,121 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { DollarSign, Loader2, Search, Fuel, TrendingDown, PieChart } from "lucide-react";
+import { getExpenses } from "@/lib/api";
+
+const TYPE_BADGE = {
+  fuel: "bg-[#F59E0B]/10 text-[#F59E0B]",
+  maintenance: "bg-[#2563EB]/10 text-[#2563EB]",
+  insurance: "bg-purple-50 text-purple-600",
+  toll: "bg-[#16A34A]/10 text-[#16A34A]",
+  parking: "bg-gray-100 text-gray-500",
+  other: "bg-gray-100 text-gray-500"
+};
+
+export default function ExpensesPage() {
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("all");
+
+  useEffect(() => {
+    (async () => {try {setExpenses(await getExpenses());} catch {} finally {setLoading(false);}})();
+  }, []);
+
+  const filtered = expenses.filter((e) => {
+    const matchSearch = ((e.vehicle_name || "") + (e.description || "")).toLowerCase().includes(search.toLowerCase());
+    const matchType = filterType === "all" || e.expense_type === filterType;
+    return matchSearch && matchType;
+  });
+
+  const totalCost = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+  const fuelCost = expenses.filter((e) => e.expense_type === "fuel").reduce((s, e) => s + (e.amount || 0), 0);
+  const maintenanceCost = expenses.filter((e) => e.expense_type === "maintenance").reduce((s, e) => s + (e.amount || 0), 0);
+  const otherCost = totalCost - fuelCost - maintenanceCost;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>Expenses & Fuel</h1>
+        <p className="text-sm text-gray-500 mt-1">Operational cost breakdown per vehicle</p>
+      </div>
+
+      {/* KPI Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+        { label: "Total Spend", value: `$${totalCost.toLocaleString()}`, icon: DollarSign, color: "#2563EB", bg: "bg-[#2563EB]/10" },
+        { label: "Fuel Costs", value: `$${fuelCost.toLocaleString()}`, icon: Fuel, color: "#F59E0B", bg: "bg-[#F59E0B]/10" },
+        { label: "Maintenance", value: `$${maintenanceCost.toLocaleString()}`, icon: TrendingDown, color: "#DC2626", bg: "bg-[#DC2626]/10" },
+        { label: "Other", value: `$${otherCost.toLocaleString()}`, icon: PieChart, color: "#16A34A", bg: "bg-[#16A34A]/10" }].
+        map((s) =>
+        <div key={s.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 card-hover">
+            <div className="flex items-center gap-3 mb-3">
+              <div className={`w-10 h-10 ${s.bg} rounded-xl flex items-center justify-center`}><s.icon className="w-5 h-5" style={{ color: s.color }} /></div>
+            </div>
+            <p className="text-xs font-medium text-gray-400">{s.label}</p>
+            <p className="text-xl font-bold text-gray-900 mt-0.5">{s.value}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Search & Type Filter */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input type="text" placeholder="Search by vehicle or description..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:border-[#2563EB]/40" />
+        </div>
+        <div className="flex gap-2">
+          {["all", "fuel", "maintenance", "insurance", "toll"].map((t) =>
+          <button key={t} onClick={() => setFilterType(t)} className={`px-3.5 py-2 text-xs font-semibold rounded-lg capitalize transition-colors ${filterType === t ? "bg-[#2563EB] text-white shadow-sm" : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"}`}>
+              {t === "all" ? "All" : t}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        {loading ?
+        <div className="flex items-center justify-center p-16"><Loader2 className="w-7 h-7 text-[#2563EB] animate-spin" /></div> :
+
+        <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-gray-50 text-xs text-gray-400 font-semibold uppercase tracking-wider">
+                  <th className="px-6 py-3.5">Vehicle</th>
+                  <th className="px-6 py-3.5">Type</th>
+                  <th className="px-6 py-3.5">Description</th>
+                  <th className="px-6 py-3.5">Amount</th>
+                  <th className="px-6 py-3.5">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {filtered.length === 0 ?
+              <tr><td colSpan={5} className="text-center py-12 text-sm text-gray-400">No expenses found</td></tr> :
+              filtered.map((e) =>
+              <tr key={e.id} className="table-row-hover">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 bg-[#2563EB]/10 rounded-lg flex items-center justify-center"><DollarSign className="w-4 h-4 text-[#2563EB]" /></div>
+                        <span className="text-sm font-semibold text-gray-900">{e.vehicle_name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full capitalize ${TYPE_BADGE[e.expense_type] || "bg-gray-100 text-gray-500"}`}>
+                        {e.expense_type}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{e.description || "—"}</td>
+                    <td className="px-6 py-4 text-sm font-semibold text-gray-900">${(e.amount || 0).toLocaleString()}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">{e.date || "—"}</td>
+                  </tr>
+              )}
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </div>);
+
+}
