@@ -1,3 +1,4 @@
+# Python / Odoo
 *.pyc
 __pycache__/
 *.pyo
@@ -8,15 +9,17 @@ __pycache__/
 *.swp
 *.swo
 
-# Next.js
-fleetiq-ui/.next/
-fleetiq-ui/node_modules/
-fleetiq-ui/out/
+# Node / React (Headless UI)
+static/src/fleetflow-ui/node_modules/
+static/src/fleetflow-ui/dist/
+static/src/fleetflow-ui/.env
+static/src/fleetflow-ui/.env.local
+static/src/fleetflow-ui/.env.*.local
 
-# Old folder (kept locally, excluded from git)
-fleetflow-ui/
-
-# Node
+# General
 node_modules/
 .env
 .env.local
+dist/
+build/
+.DS_Store
