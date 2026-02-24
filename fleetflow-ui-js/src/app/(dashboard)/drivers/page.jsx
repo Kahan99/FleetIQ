@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Users, ShieldCheck, AlertCircle, Star, Search, Filter, Mail, Phone, ExternalLink, Loader2 } from "lucide-react";
-import { getDrivers } from "@/lib/api";
+import { getDrivers, toggleDriverStatus, createDriver } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import AddDriverModal from "@/components/AddDriverModal";
 
-function DriverCard({ driver }) {
+function DriverCard({ driver, onStatusChange }) {
   const completionRate = 85; // Mock data
   const safetyScore = driver.safety_score || 0;
 
@@ -22,8 +22,17 @@ function DriverCard({ driver }) {
           <div>
             <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{driver.name}</h3>
             <p className="text-xs text-gray-400 font-medium">Emp ID: #DRV-{driver.id}</p>
-            <div className="flex gap-2 mt-2">
-              <Badge variant="neutral" className="text-[10px] py-0">{driver.status?.replace('_', ' ') || 'Registered'}</Badge>
+            <div className="flex gap-2 mt-2 text-gray-700">
+              <select
+                className="text-[10px] py-0.5 px-2 rounded bg-gray-50 border border-gray-200 uppercase font-semibold cursor-pointer outline-none focus:ring-2 focus:ring-blue-500/20"
+                value={driver.status}
+                onChange={(e) => onStatusChange(driver.id, e.target.value)}
+              >
+                <option value="on_duty">On Duty</option>
+                <option value="off_duty">Off Duty</option>
+                <option value="on_trip">On Trip</option>
+                <option value="suspended">Suspended</option>
+              </select>
               {driver.license_expiry && new Date(driver.license_expiry) < new Date() &&
                 <Badge variant="danger" className="text-[10px] py-0">License Expired</Badge>
               }
@@ -70,19 +79,29 @@ export default function DriversPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const fetchDrivers = async () => {
+    try {
+      const data = await getDrivers();
+      setDrivers(data);
+    } catch (error) {
+      console.error("Failed to fetch drivers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchDrivers = async () => {
-      try {
-        const data = await getDrivers();
-        setDrivers(data);
-      } catch (error) {
-        console.error("Failed to fetch drivers:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchDrivers();
   }, []);
+
+  const handleStatusChange = async (driverId, newStatus) => {
+    try {
+      await toggleDriverStatus(driverId, newStatus);
+      await fetchDrivers();
+    } catch (err) {
+      alert("Failed to update status");
+    }
+  };
 
   const filteredDrivers = drivers.filter((d) =>
     d.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,7 +121,6 @@ export default function DriversPage() {
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Driver Performance
           </h1>
-          <p className="text-gray-500 mt-1">Track safety scores, ratings and trip completions.</p>
         </div>
         <div className="flex gap-3">
           <Button leftIcon={<Users className="w-4 h-4" />} onClick={() => setShowAddModal(true)}>Add Driver</Button>
@@ -124,7 +142,7 @@ export default function DriversPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredDrivers.map((driver) =>
-          <DriverCard key={driver.id} driver={driver} />
+          <DriverCard key={driver.id} driver={driver} onStatusChange={handleStatusChange} />
         )}
       </div>
 
@@ -138,18 +156,19 @@ export default function DriversPage() {
       <AddDriverModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onSubmit={(driverData) => {
-          const newDriver = {
-            id: Math.random(),
-            name: driverData.name,
-            phone: driverData.phone,
-            email: driverData.email,
-            status: 'available',
-            safety_score: 100, // New drivers start perfect
-            license_expiry: driverData.license_expiry
-          };
-          setDrivers(prev => [newDriver, ...prev]);
-          alert("Driver added successfully!");
+        onSubmit={async (driverData) => {
+          try {
+            await createDriver({
+              name: driverData.name,
+              phone: driverData.phone,
+              email: driverData.email,
+              license_expiry: driverData.license_expiry
+            });
+            await fetchDrivers();
+            alert("Driver added successfully!");
+          } catch (e) {
+            alert("Failed to add driver.");
+          }
         }}
       />
     </div>);

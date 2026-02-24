@@ -58,7 +58,6 @@ export default function VehiclesPage() {
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Fleet Vehicles
           </h1>
-          <p className="text-gray-500 mt-1">Manage and track your entire vehicle inventory.</p>
         </div>
         <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => setShowAddModal(true)}>
           Add Vehicle

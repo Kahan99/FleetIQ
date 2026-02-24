@@ -1,22 +1,41 @@
 "use client";
 
-import { useState } from "react";
-import { Wrench, Calendar, AlertCircle, CheckCircle2, Search, Filter, MoreHorizontal } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Wrench, Calendar, AlertCircle, CheckCircle2, Search, Filter, MoreHorizontal, Plus, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Table, TableRow, TableCell } from "@/components/ui/Table";
-
-const MAINTENANCE_LOGS = [
-  { id: 1, vehicle: "Eicher Pro 2049", plate: "TS08-EF-1234", service: "Engine Oil Change", date: "2024-10-20", cost: "₹4,500", status: "completed" },
-  { id: 2, vehicle: "Tata Prima 5530", plate: "MH12-GH-5678", service: "Brake Pad Replacement", date: "2024-10-24", cost: "₹12,200", status: "in_progress" },
-  { id: 3, vehicle: "BharatBenz 1923", plate: "KA01-JK-9012", service: "Tire Rotation", date: "2024-10-26", cost: "₹2,800", status: "scheduled" },
-  { id: 4, vehicle: "Mahindra Blazo X", plate: "GJ05-LM-3456", service: "AC System Repair", date: "2024-10-22", cost: "₹8,900", status: "completed" },
-  { id: 5, vehicle: "Ashok Leyland", plate: "TN07-NP-7890", service: "Major Overhaul", date: "2024-10-28", cost: "₹45,000", status: "pending_approval" }];
-
+import LogMaintenanceModal from "@/components/LogMaintenanceModal";
+import { getMaintenance, getVehicles, createMaintenance } from "@/lib/api";
 
 export default function MaintenancePage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [maintenance, setMaintenance] = useState([]);
+  const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [mData, vData] = await Promise.all([getMaintenance(), getVehicles()]);
+        setMaintenance(mData);
+        setVehicles(vData);
+      } catch (e) {
+        console.error("Failed to fetch maintenance:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center p-32 gap-4">
+      <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+      <p className="text-sm text-gray-400 font-medium">Loading Maintenance Logs...</p>
+    </div>);
 
   return (
     <div className="space-y-8">
@@ -25,39 +44,13 @@ export default function MaintenancePage() {
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Maintenance logs
           </h1>
-          <p className="text-gray-500 mt-1">Monitor fleet health and recurring service schedules.</p>
         </div>
+        <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => setShowModal(true)}>
+          Log Maintenance
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-orange-50 text-orange-600">
-            <AlertCircle className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Pending Issues</p>
-            <h3 className="text-2xl font-bold text-gray-900">12</h3>
-          </div>
-        </Card>
-        <Card className="flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-blue-50 text-blue-600">
-            <Calendar className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Scheduled Service</p>
-            <h3 className="text-2xl font-bold text-gray-900">08</h3>
-          </div>
-        </Card>
-        <Card className="flex items-center gap-4">
-          <div className="p-4 rounded-2xl bg-emerald-50 text-emerald-600">
-            <CheckCircle2 className="w-6 h-6" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">Completed (MTD)</p>
-            <h3 className="text-2xl font-bold text-gray-900">45</h3>
-          </div>
-        </Card>
-      </div>
+
 
       <Card>
         <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -74,35 +67,50 @@ export default function MaintenancePage() {
         </div>
 
         <Table headers={["Vehicle", "Service Details", "Schedule Date", "Est. Cost", "Status"]}>
-          {MAINTENANCE_LOGS.map((log) =>
+          {maintenance.map((log) =>
             <TableRow key={log.id}>
               <TableCell>
                 <div className="flex flex-col">
                   <span className="font-bold text-gray-900">{log.vehicle}</span>
-                  <span className="text-xs text-slate-400 font-mono">{log.plate}</span>
+                  <span className="text-xs text-slate-400 font-mono">{log.plate || '—'}</span>
                 </div>
               </TableCell>
-              <TableCell className="font-medium text-gray-700">{log.service}</TableCell>
+              <TableCell className="font-medium text-gray-700">{log.issue || log.service}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Calendar className="w-4 h-4" />
                   <span className="text-sm">{log.date}</span>
                 </div>
               </TableCell>
-              <TableCell className="font-bold text-gray-900">{log.cost}</TableCell>
+              <TableCell className="font-bold text-gray-900">{log.cost.toLocaleString()}</TableCell>
               <TableCell>
                 <Badge variant={
                   log.status === 'completed' ? 'success' :
                     log.status === 'in_progress' ? 'info' :
                       log.status === 'scheduled' ? 'neutral' : 'warning'
                 }>
-                  {log.status.replace('_', ' ')}
+                  {(log.status || 'Scheduled').replace('_', ' ')}
                 </Badge>
               </TableCell>
             </TableRow>
           )}
         </Table>
       </Card>
+
+      <LogMaintenanceModal
+        isOpen={showModal}
+        vehicles={vehicles}
+        onClose={() => setShowModal(false)}
+        onSubmit={async (data) => {
+          await createMaintenance({
+            ...data,
+            status: 'scheduled'
+          });
+          const mData = await getMaintenance();
+          setMaintenance(mData);
+          alert("Maintenance logged. Vehicle is now In Shop.");
+        }}
+      />
     </div>);
 
 }

@@ -6,7 +6,7 @@ import AuthLayout from "./app/(auth)/layout";
 import DashboardLayout from "./app/(dashboard)/layout";
 
 // Pages
-import LandingPage from "./app/page";
+import { Navigate } from "react-router-dom";
 import LoginPage from "./app/(auth)/login/page";
 import RegisterPage from "./app/(auth)/register/page";
 
@@ -24,7 +24,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Public Landing Page */}
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
 
           {/* Auth Routes */}
           <Route element={<AuthLayout />}>

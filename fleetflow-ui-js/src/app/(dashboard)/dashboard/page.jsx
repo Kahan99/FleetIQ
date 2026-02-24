@@ -80,7 +80,6 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Fleet Overview
           </h1>
-          <p className="text-gray-500 mt-1">Manage and monitor your fleet operations in real-time.</p>
         </div>
         <div className="flex items-center gap-3">
           <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => setShowNewTripModal(true)}>
@@ -98,7 +97,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Trips Table */}
-      <Card title="Recent Fleet Activity" subtitle="Real-time status of your latest trips and deliveries.">
+      <Card title="Recent Fleet Activity">
         <Table headers={["Trip ID", "Vehicle", "Route", "Schedule", "Status"]}>
           {data.trips.slice(0, 6).map((trip) =>
             <TableRow key={trip.id}>

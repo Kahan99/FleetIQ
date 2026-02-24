@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingUp, Download } from "lucide-react";
-
+import { TrendingUp, Download, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 export default function AnalyticsPage() {
   const financialData = [
     { month: "Jan", revenue: "Rs. 17L", fuel: "Rs. 6L", maintenance: "Rs. 2L", profit: "Rs. 9L" },
@@ -22,11 +22,13 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center justify-between w-full">
           <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
             Operational Analytics & Financial Reports
           </h1>
-          <p className="text-gray-500 mt-1">Data-driven decision making and fleet performance tracking.</p>
+          <Button leftIcon={<Download className="w-4 h-4" />}>
+            Export CSV
+          </Button>
         </div>
       </div>
 

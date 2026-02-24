@@ -8,15 +8,28 @@ export default function NewTripModal({ isOpen, onClose, vehicles, drivers, onSub
         destination: '',
         vehicle_id: '',
         driver_id: '',
-        date: ''
+        date: '',
+        cargo_weight: ''
     });
+
+    const [error, setError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-        onClose();
+        setError(null);
+        setIsSubmitting(true);
+        try {
+            await onSubmit(formData);
+            setFormData({ origin: '', destination: '', vehicle_id: '', driver_id: '', date: '', cargo_weight: '' });
+            onClose();
+        } catch (err) {
+            setError(err.message || "Failed to create trip.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -98,19 +111,42 @@ export default function NewTripModal({ isOpen, onClose, vehicles, drivers, onSub
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Schedule Date</label>
-                                <div className="relative">
-                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                                    <input
-                                        type="date"
-                                        required
-                                        value={formData.date}
-                                        onChange={e => setFormData({ ...formData, date: e.target.value })}
-                                        className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-gray-600"
-                                    />
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Schedule Date</label>
+                                    <div className="relative">
+                                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                        <input
+                                            type="date"
+                                            required
+                                            value={formData.date}
+                                            onChange={e => setFormData({ ...formData, date: e.target.value })}
+                                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-gray-600"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Cargo Weight (KG)</label>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            required
+                                            min="1"
+                                            value={formData.cargo_weight}
+                                            onChange={e => setFormData({ ...formData, cargo_weight: e.target.value })}
+                                            placeholder="e.g. 1500"
+                                            className="w-full px-4 py-2 border border-gray-200 rounded-xl text-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-gray-600"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        {error && (
+                            <div className="p-4 bg-red-50 border border-red-100 rounded-xl flex gap-3 text-red-600 text-sm">
+                                <AlertCircle className="w-5 h-5 shrink-0" />
+                                <p>{error}</p>
+                            </div>
+                        )}
 
                         <div className="p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3 text-orange-800 text-sm">
                             <AlertCircle className="w-5 h-5 shrink-0" />
@@ -120,8 +156,10 @@ export default function NewTripModal({ isOpen, onClose, vehicles, drivers, onSub
                 </div>
 
                 <div className="p-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50">
-                    <Button variant="ghost" type="button" onClick={onClose}>Cancel</Button>
-                    <Button type="submit" form="new-trip-form">Create Trip</Button>
+                    <Button variant="ghost" type="button" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
+                    <Button type="submit" form="new-trip-form" disabled={isSubmitting}>
+                        {isSubmitting ? "Creating..." : "Create Trip"}
+                    </Button>
                 </div>
             </div>
         </div>
